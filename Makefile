@@ -21,7 +21,7 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c $(HDRS)
 AR				= ar
 ARFLAGS			= rcs
 CC				= gcc
-CFLAGS			= -Wall -Wextra -Werror
+CFLAGS			= -Wall -Wextra -Werror -pthread
 
 # --- COLOR ---
 YELLOW			= '\033[0;33m'

@@ -16,42 +16,49 @@ int valid(int ac, char **av)
   return (0);
 }
 
-void init_data(t_data **data, int ac, char **av)
+void info_reservation(t_info **reservation, int ac, char **av)
 {
-  (*data)->philo_nb = ft_atoi(av[1]);
-	(*data)->time_die = ft_atoi(av[2]);
-	(*data)->time_eat = ft_atoi(av[3]);
-	(*data)->time_slp = ft_atoi(av[4]);
-  (*data)->time_thk = 0;
+  (*reservation)->start = get_time((*reservation)->start);
+  (*reservation)->number_of_philosophers = ft_atoi(av[1]);
+	(*reservation)->time_to_die = ft_atoi(av[2]);
+	(*reservation)->time_to_eat = ft_atoi(av[3]);
+	(*reservation)->time_to_sleep = ft_atoi(av[4]);
+  //(*reservation)->time_thk = 0;
   //if with think ?
-  (*data)->done = 0;
-  (*data)->died = 0;
+  (*reservation)->done = 0;
+  (*reservation)->died = 0;
   if (ac == 5)
-    (*data)->eat_trig = -1;
+    (*reservation)->number_of_times_each_philosopher_must_eat = -1;
   if (ac == 6)
-    (*data)->eat_trig = ft_atoi(av[5]);
-  
-  printf("ok init data\n");
+    (*reservation)->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
+  printf("Information about the reservation has been taken, data must be provide one at a time\n");
   //clean_exit(NULL, data, 3, ERROR_DATA);
 }
 
-void init_philo(/*t_philo **philo, t_data **data*/)
+void template_client(t_viewpoint **philosopher_id, t_info **reservation)
 {
-  printf("ok init philo\n");
+  (*philosopher_id)->id = 0;
+  (*philosopher_id)->last_meal = 0;
+  (*philosopher_id)->have_finished = 0;
+  (*philosopher_id)->about_to_die = 0;
+  (*philosopher_id)->dead = 0;
+  (*philosopher_id)->appetite = (*reservation)->number_of_times_each_philosopher_must_eat;
+  (*philosopher_id)->lft_fork = (*philosopher_id)->id;
+  (*philosopher_id)->rgt_fork = ((*philosopher_id)->id + 1) % (*reservation)->number_of_philosophers;
+  printf("Template of client is done, each can ask one at a time the server about the reservation.\n");
   //clean_exit(philo, data, 4, ERROR_ID);
 }
 
-int init(t_philo **philo, t_data **data, int ac, char **av)
+int init(t_info **reservation, t_viewpoint **philosopher_id, int ac, char **av)
 {
-  *data = malloc(sizeof(t_data));
-  if (!(*data))
+  *reservation = malloc(sizeof(t_info));
+  if (!(*reservation))
     clean_exit(NULL, NULL, 2, MEM_MALLOC);
-  (*data)->mutex = NULL;
-  init_data(data, ac, av);
-  *philo = malloc(sizeof(t_philo));
-  if (!(*philo))
-    clean_exit(NULL, data, 3, MEM_MALLOC);
-  (*philo)->fork = NULL;
-  init_philo(/*philo, data*/);
+  info_reservation(reservation, ac, av);
+  *philosopher_id = malloc(sizeof(t_viewpoint));
+  if (!(*philosopher_id))
+    clean_exit(NULL, reservation, 3, MEM_MALLOC);
+  (*philosopher_id)->fork = NULL;
+  template_client(philosopher_id, reservation);
   return (0);
 }

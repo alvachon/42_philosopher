@@ -5,6 +5,8 @@
 # include <stdlib.h>
 # include <limits.h>//
 # include <pthread.h>
+# include <sys/time.h>
+# include <unistd.h>
 
 #define ERROR_ARG "Invalid argument quantity\n"
 #define ERROR_INPUT "Invalid Input\n"
@@ -12,43 +14,52 @@
 #define MEM_MALLOC  "Not enough space to allocate\n"
 #define ERROR_DATA "Invalid data\n"
 #define ERROR_ID  "Invalid philo\n"
+#define ERROR_THREAD "Failed to create thread\n"
 
-typedef struct s_data
+typedef struct s_info
 {
-    unsigned long      start;
-    short              philo_nb;
-    short              time_die;
-    short              time_eat;
-    short              time_slp;
-    short              time_thk;
-    short              eat_trig;
-    int                done;
-    int                died;
-    pthread_mutex_t    *mutex;
-}   t_data
+    unsigned long    start;
+    int              number_of_philosophers;
+    int              time_to_die;
+    int              time_to_eat;
+    int              time_to_sleep;
+    //int            time_thk;
+    int              number_of_times_each_philosopher_must_eat;// (stop simulation)
+    int              done;
+    int              died;
+}   t_info
 ;
 
-typedef struct s_philo
+typedef struct s_viewpoint
 {
-    unsigned long       last_meal;
-    short               data_meal;
-    short               lft_fork;
-    short               rgt_fork;
-    int                 id;
-    pthread_mutex_t     *fork;
-    t_data              *data;
-}   t_philo
+    int               id;//as a number from 1 to number_of_philosophers
+    unsigned long     last_meal;
+    int               appetite;
+    int               have_finished;
+    int               about_to_die;
+    int               dead;
+    int               lft_fork;
+    int               rgt_fork;
+    pthread_mutex_t   *fork;
+    t_info            *reservation;
+}   t_viewpoint
 ;
+
+/*
+Philosopher number 1 sits next to philosopher number number_of_philosophers.
+Any other philosopher number N sits between philosopher number N - 1 and philosopher number N + 1.
+*/
 
 /*init.c*/
-int     valid(int ac, char **av);
-void    init_data(/*t_data **data, int ac, char **av*/);
-void    init_philo(/*t_philo **philo, t_data **data*/);
-int     init(t_philo **philo, t_data **data, int ac, char **av);
+int             valid(int ac, char **av);
+void            info_reservation(t_info **reservation, int ac, char **av);
+void            template_client(t_viewpoint **philosopher_id, t_info **reservation);
+int             init(t_info **reservation, t_viewpoint **philosopher_id, int ac, char **av);
 /*lib.c*/
-int     is_num(char *str);
-int     ft_atoi(char *str);
+unsigned long	get_time(unsigned int start);
+int             is_num(char *str);
+int             ft_atoi(char *str);
 /*message.c*/
-void    clean_exit(t_philo **philo, t_data **data, int code, char *error);
+void            clean_exit(t_viewpoint **philosopher_id, t_info **reservation, int code, char *error);
 
 #endif

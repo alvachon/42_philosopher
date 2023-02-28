@@ -1,5 +1,17 @@
 #include "../include/philo.h"
 
+
+unsigned long	get_time(unsigned int start)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	if (!start)
+		return((time.tv_sec * 1000) + (time.tv_usec / 1000));
+	else
+		return((time.tv_sec * 1000) + (time.tv_usec / 1000) - start);
+}
+
 int	is_num(char *str)
 {
 	int	i;

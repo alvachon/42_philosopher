@@ -1,6 +1,6 @@
 #include "../include/philo.h"
 
-void  clean_exit(t_philo **philo, t_data **data, int code, char *error)
+void  clean_exit(t_viewpoint **philosopher_id, t_info **reservation, int code, char *error)
 {
   if (code == 2)
   {
@@ -9,14 +9,14 @@ void  clean_exit(t_philo **philo, t_data **data, int code, char *error)
   }
   if (code == 3)
   {
-    free(*data);
+    free(*reservation);
     perror(error);
     exit (EXIT_FAILURE);
   }
   if (code == 4)
   {
-    free(*data);
-    free(*philo);
+    free(*reservation);
+    free(*philosopher_id);//
     perror(error);
     exit (EXIT_FAILURE);
   }
