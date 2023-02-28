@@ -47,7 +47,7 @@ void    init_philo(/*t_philo **philo, t_data **data*/);
 int     init(t_philo **philo, t_data **data, int ac, char **av);
 /*lib.c*/
 int     is_num(char *str);
-short	ft_atos(char *str);
+int     ft_atoi(char *str);
 /*message.c*/
 void    clean_exit(t_philo **philo, t_data **data, int code, char *error);
 

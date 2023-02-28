@@ -16,10 +16,10 @@ int	is_num(char *str)
 	return (1);
 }
 
-short	ft_atos(char *str)
+int	ft_atoi(char *str)
 {
-	short	sign;
-	short	nb;
+	int	sign;
+	int	nb;
 
 	while (*str <= 32)
 		str++;
