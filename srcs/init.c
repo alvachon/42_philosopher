@@ -23,31 +23,12 @@ void info_reservation(t_info **reservation, int ac, char **av)
 	(*reservation)->time_to_die = ft_atoi(av[2]);
 	(*reservation)->time_to_eat = ft_atoi(av[3]);
 	(*reservation)->time_to_sleep = ft_atoi(av[4]);
-  //(*reservation)->time_thk = 0;
-  //if with think ?
-  (*reservation)->done = 0;
-  (*reservation)->died = 0;
-  (*reservation)->i = 0;
   if (ac == 5)
     (*reservation)->number_of_times_each_philosopher_must_eat = -1;
   if (ac == 6)
     (*reservation)->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
-  printf("Information about the reservation has been taken, data must be provide one at a time\n");
+  printf("Information about the reservation has been taken.\n");
   //clean_exit(NULL, data, 3, ERROR_DATA);
-}
-
-void template_client(t_viewpoint **philosopher_id, t_info *reservation)
-{
-  (*philosopher_id)->id = reservation->i + 1;
-  (*philosopher_id)->last_meal = 0;
-  (*philosopher_id)->have_finished = 0;
-  (*philosopher_id)->about_to_die = 0;
-  (*philosopher_id)->dead = 0;
-  (*philosopher_id)->appetite = reservation->number_of_times_each_philosopher_must_eat;
-  (*philosopher_id)->lft_fork = (*philosopher_id)->id;
-  (*philosopher_id)->rgt_fork = ((*philosopher_id)->id + 1) % reservation->number_of_philosophers;
-  printf("Template of client is done, each can ask one at a time the server about the reservation.\n");
-  //clean_exit(philo, data, 4, ERROR_ID);
 }
 
 int init(t_info **reservation, int ac, char **av)
