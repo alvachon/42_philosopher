@@ -27,6 +27,7 @@ typedef struct s_info
     int              number_of_times_each_philosopher_must_eat;// (stop simulation)
     int              done;
     int              died;
+    int              i;
 }   t_info
 ;
 
@@ -41,7 +42,6 @@ typedef struct s_viewpoint
     int               lft_fork;
     int               rgt_fork;
     pthread_mutex_t   *fork;
-    t_info            *reservation;
 }   t_viewpoint
 ;
 
@@ -53,13 +53,13 @@ Any other philosopher number N sits between philosopher number N - 1 and philoso
 /*init.c*/
 int             valid(int ac, char **av);
 void            info_reservation(t_info **reservation, int ac, char **av);
-void            template_client(t_viewpoint **philosopher_id, t_info **reservation);
-int             init(t_info **reservation, t_viewpoint **philosopher_id, int ac, char **av);
+void            template_client(t_viewpoint **philosopher_id, t_info *reservation);
+int             init(t_info **reservation, int ac, char **av);
 /*lib.c*/
 unsigned long	get_time(unsigned int start);
 int             is_num(char *str);
 int             ft_atoi(char *str);
 /*message.c*/
-void            clean_exit(t_viewpoint **philosopher_id, t_info **reservation, int code, char *error);
+void            clean_exit(t_info **reservation, int code, char *error);
 
 #endif
