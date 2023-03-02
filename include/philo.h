@@ -18,7 +18,7 @@
 
 typedef struct s_info
 {
-    unsigned long    start;
+    long             start;
     int              number_of_philosophers;
     int              time_to_die;
     int              time_to_eat;
@@ -30,13 +30,8 @@ typedef struct s_info
 typedef struct s_thread
 {
     int               thread_id;
-    unsigned long     last_meal;
-    int               appetite;
-    int               have_finished;
-    int               about_to_die;
-    int               dead;
-    int               lft_fork;
-    int               rgt_fork;
+    char              team;
+    int               eat;
     pthread_mutex_t   *fork;
     t_info            *reservation;
 }   t_thread
@@ -52,7 +47,8 @@ int             valid(int ac, char **av);
 void            info_reservation(t_info **reservation, int ac, char **av);
 int             init(t_info **reservation, int ac, char **av);
 /*lib.c*/
-unsigned long	get_time(unsigned int start);
+int	            ft_strcmp(char *s1, char *s2);
+long            get_time(void);
 int             is_num(char *str);
 int             ft_atoi(char *str);
 /*message.c*/

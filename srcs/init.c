@@ -18,7 +18,7 @@ int valid(int ac, char **av)
 
 void info_reservation(t_info **reservation, int ac, char **av)
 {
-  (*reservation)->start = get_time((*reservation)->start);
+  (*reservation)->start = get_time();
   (*reservation)->number_of_philosophers = ft_atoi(av[1]);
 	(*reservation)->time_to_die = ft_atoi(av[2]);
 	(*reservation)->time_to_eat = ft_atoi(av[3]);
