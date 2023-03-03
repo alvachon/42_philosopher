@@ -16,23 +16,39 @@
 #define ERROR_ID  "Invalid philo\n"
 #define ERROR_THREAD "Failed to create thread\n"
 
+typedef struct  s_forks
+{
+    pthread_mutex_t *left_forks;
+    pthread_mutex_t *right_forks;
+    pthread_mutex_t one;
+}   t_forks
+;
 typedef struct s_info
 {
-    long             start;
-    int              number_of_philosophers;
-    int              time_to_die;
-    int              time_to_eat;
-    int              time_to_sleep;
-    int              number_of_times_each_philosopher_must_eat;//(stop simulation)
+    long                start;
+    int                 number_of_philosophers;
+    t_forks             *number_of_forks;
+    int                 time_to_die;
+    int                 time_to_eat;
+    int                 time_to_sleep;
+    int                 number_of_times_each_philosopher_must_eat;//(stop simulation)
+    int                 a_thread_died;//
+    int                 eat_done;//
+    pthread_mutex_t     lock_eat[1];
+    pthread_mutex_t     dead_queue[1];//
 }   t_info
 ;
 
 typedef struct s_thread
 {
     int               thread_id;
-    char              team;
-    int               eat;
-    pthread_mutex_t   *fork;
+    char              team;//pt pas besoin
+    int               has_forks;
+    int               is_eating;
+    int               is_sleepig;
+    int               is_thinking;
+    long              last_meal;
+    int               nb_meal;
     t_info            *reservation;
 }   t_thread
 ;
