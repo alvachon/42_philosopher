@@ -29,6 +29,10 @@ void  set_thread(t_thread *thread, t_info *info, int t)
 {
   (void)*info;
   thread->thread_id = t;
+  pthread_mutex_init(&thread->a_fork, NULL);
+  thread->last_meal = get_time() - info->start;
+  thread->nb_meal = 0;
+  thread->reservation = info;
 }
 
 int main(int ac, char **av)
