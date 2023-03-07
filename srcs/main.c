@@ -9,30 +9,23 @@
     usleep(50);
 }*/
 
-void  set_info(t_info **info, int ac, char **av)
+void  *start(void *arg)
 {
-  (void)av;
-  (*info)->start = get_time();
-  (*info)->number_of_philosophers = ft_atoi(av[1]);
-  (*info)->time_to_die = ft_atoi(av[2]);
-  (*info)->time_to_eat = ft_atoi(av[3]);
-  (*info)->time_to_sleep = ft_atoi(av[4]);
-  if (ac == 5)
-    (*info)->number_of_times_each_philosopher_must_eat = 0;//-1;
-  if (ac == 6)
-    (*info)->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
-  (*info)->a_thread_died = 0;
-  (*info)->eat_done = 0;
-}
-
-void  set_thread(t_thread *thread, t_info *info, int t)
-{
-  (void)*info;
-  thread->thread_id = t;
-  pthread_mutex_init(&thread->a_fork, NULL);
-  thread->last_meal = get_time() - info->start;
-  thread->nb_meal = 0;
-  thread->reservation = info;
+  t_thread        philo;
+  pthread_mutex_t death;
+  long            time;
+  
+  philo = *(t_thread *)arg;
+  pthread_mutex_init(&death, NULL);
+  if (philo.reservation->will_die >= 1)
+  {
+    pthread_mutex_lock(&death);
+    time = get_time();
+    printf("\nWhat time is it ? %ld\n\n", time);
+    pthread_mutex_unlock(&death);
+  }
+  pthread_mutex_destroy(&death);
+  return (0);
 }
 
 int main(int ac, char **av)
@@ -40,6 +33,7 @@ int main(int ac, char **av)
     int       t;
     t_info    *info;
     t_thread  *array_thread;
+    pthread_t  threads[ft_atoi(av[1])];
 
     t = 0;
     if ((valid(ac, av) == 0))
@@ -52,10 +46,20 @@ int main(int ac, char **av)
       while (t < ft_atoi(av[1]))
       {
         set_thread(&array_thread[t], info, t + 1);
-        printf(" id = %d\n", array_thread[t].thread_id);
+        if (pthread_create(threads + t, NULL, &start, (void *)&array_thread[t]) != 0)
+          return (1);
+        printer_thread(&array_thread[t]);
+        printf("\nThread %d has started\n", t);
         t++;
       }
       t = 0;
+      while (t < ft_atoi(av[1]))
+      {
+        if (pthread_join(threads[t], NULL) != 0)
+          return (1);
+        printf("Thread %d has finished execution\n", t);
+        t++;
+      }
       printer_info(info);
       free(array_thread);
       free(info);

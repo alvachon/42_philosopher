@@ -23,8 +23,9 @@ typedef struct s_info
     int    time_to_eat;
     int    time_to_sleep;
     int    number_of_times_each_philosopher_must_eat;
-    int    a_thread_died;//
-    int    eat_done;//
+    int    will_die;
+    long   time_of_death;
+
 }   t_info
 ;
 
@@ -45,7 +46,9 @@ Any other philosopher number N sits between philosopher number N - 1 and philoso
 
 /*init.c*/
 int             valid(int ac, char **av);
-//void            info_reservation(t_info **reservation, int ac, char **av);
+int             read_future(t_info *info);
+void            set_info(t_info **info, int ac, char **av);
+void            set_thread(t_thread *thread, t_info *info, int t);
 //int             init(t_info **reservation, int ac, char **av);
 /*lib.c*/
 int	            ft_strcmp(char *s1, char *s2);
@@ -56,5 +59,6 @@ int             ft_atoi(char *str);
 //void            clean_exit(t_info **reservation, int code, char *error);
 
 void            printer_info(t_info *info);
+void            printer_thread(t_thread *thread);
 
 #endif

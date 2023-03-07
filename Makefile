@@ -61,6 +61,7 @@ re: fclean all
 valgrind:
 	valgrind --leak-check=full --show-leak-kinds=all ./philosopher 2 3 2 5
 
-#valgrind --tool=drd --trace-fork-join=yes --trace-mutex=yes ./philosopher 2 3 2 5
+helgrind:
+	valgrind --tool=helgrind ./philosopher 2 3 2 5
 
 .PHONY:	all clean fclean re init
