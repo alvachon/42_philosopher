@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alvachon <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/07 15:16:24 by alvachon          #+#    #+#             */
+/*   Updated: 2023/03/07 15:16:26 by alvachon         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../include/philo.h"
 
@@ -21,38 +31,32 @@ int   read_future(t_info *info)
   if (info->time_to_eat > info->time_to_die)
     return (1);
   if (info->time_to_sleep > info->time_to_die)
-    return (2);
+    return (1);
   if ((info->time_to_eat + info->time_to_sleep) > info->time_to_die)
-    return (3);
+    return (1);
   if (info->number_of_philosophers == 1)
-    return (4);
+    return (1);
   if (info->time_to_eat > info->time_to_sleep)
   {
     if (info->number_of_philosophers % 2 == 0)
     {
       if ((info->time_to_die * 2) < (info->time_to_eat + info->time_to_sleep))
-        return (5);
+        return (1);
     }
     else
     {
       if ((info->time_to_die * 3) < (info->time_to_eat + info->time_to_sleep))
-        return (6);
+        return (1);
     }
   }
   if (info->number_of_times_each_philosopher_must_eat != -1)
-    return (7);
+    return (0);//
   return (0);
 }
 
 long  set_time_of_death(t_info *info, int r)
 {
   if (r == 1)
-    return ((long)info->time_to_eat);
-  if (r == 2)
-    return ((long)info->time_to_sleep);
-  if (r == 3 || r == 5 || r == 6)
-    return ((long)info->time_to_sleep + info->time_to_eat);
-  if (r == 4 || r == 7)
     return ((long)info->time_to_die);
   return (0);
 }

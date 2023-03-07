@@ -10,7 +10,8 @@ OBJS_DIR		= ./objs
 SRCS			= $(SRCS_DIR)/init.c \
 				  $(SRCS_DIR)/lib.c \
 				  $(SRCS_DIR)/main.c \
-				  $(SRCS_DIR)/debug.c
+				  $(SRCS_DIR)/debug.c \
+				  $(SRCS_DIR)/action.c
 OBJS 			= $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 HDRS_FILE		= philo.h
 HDRS			= $(INCL_DIR)/$(HDRS_FILE)
@@ -21,7 +22,7 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c $(HDRS)
 AR				= ar
 ARFLAGS			= rcs
 CC				= gcc
-CFLAGS			= -Wall -Wextra -Werror 
+CFLAGS			= -Wall -Wextra -Werror
 TFLAGS			= -pthread
 SFLAGS			= -fsanitize=thread
 
@@ -39,7 +40,7 @@ all: init $(NAME)
 
 $(NAME): $(OBJS)
 	@echo $(YELLOW) "\nIncoming :\n" $(RESET_COLOR)
-	$(CC) $(CFLAGS) $(TFLAGS) $(OBJS) -o $(NAME)
+	$(CC) $(CFLAGS) $(TFLAGS) $(SFLAGS) $(OBJS) -o $(NAME)
 	@echo $(GREEN) "\nCompilation of philosopher done.\n" $(RESET_COLOR)
 
 init:

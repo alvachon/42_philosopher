@@ -1,39 +1,45 @@
 #include "../include/philo.h"
 
-/*void  waitsys(time_t timer)
+//usleep 500
+void  waitsys(time_t timer)
 {
   time_t delay;
 
   delay = get_time() + timer;
-  while (get_time() < delay)
-    usleep(50);
-}*/
+  while (get_time() <= delay)
+  {
+    if (get_time() == delay)
+      return ;
+  }
+}
 
 void  *start(void *arg)
 {
+  int             i;
   t_thread        philo;
-  pthread_mutex_t death;
-  long            time;
+  pthread_mutex_t action;
   
+  i = 0;
   philo = *(t_thread *)arg;
-  pthread_mutex_init(&death, NULL);
-  if (philo.reservation->will_die >= 1)
+  pthread_mutex_init(&action, NULL);
+  while (1)
   {
-    pthread_mutex_lock(&death);
-    time = get_time();
-    printf("\nWhat time is it ? %ld\n\n", time);
-    pthread_mutex_unlock(&death);
+    i = check_time_to_die(philo, action);
+    if (i == 1)
+      break ;
+    time_to_eat(&philo, action);
+    time_to_think(&philo, action);
   }
-  pthread_mutex_destroy(&death);
+  pthread_mutex_destroy(&action);
   return (0);
 }
 
 int main(int ac, char **av)
 {
-    int       t;
-    t_info    *info;
-    t_thread  *array_thread;
-    pthread_t  threads[ft_atoi(av[1])];
+    int             t;
+    t_info          *info;
+    t_thread        *array_thread;
+    pthread_t       threads[ft_atoi(av[1])];
 
     t = 0;
     if ((valid(ac, av) == 0))
@@ -48,8 +54,7 @@ int main(int ac, char **av)
         set_thread(&array_thread[t], info, t + 1);
         if (pthread_create(threads + t, NULL, &start, (void *)&array_thread[t]) != 0)
           return (1);
-        printer_thread(&array_thread[t]);
-        printf("\nThread %d has started\n", t);
+        printf("Thread %d has started\n", t);
         t++;
       }
       t = 0;
@@ -57,12 +62,12 @@ int main(int ac, char **av)
       {
         if (pthread_join(threads[t], NULL) != 0)
           return (1);
-        printf("Thread %d has finished execution\n", t);
+        printf("Thread %d has finished\n", t);
         t++;
       }
-      printer_info(info);
       free(array_thread);
       free(info);
     }
     return (0);
 }
+//desyncroniser 

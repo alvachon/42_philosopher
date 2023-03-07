@@ -25,7 +25,6 @@ typedef struct s_info
     int    number_of_times_each_philosopher_must_eat;
     int    will_die;
     long   time_of_death;
-
 }   t_info
 ;
 
@@ -44,6 +43,13 @@ Philosopher number 1 sits next to philosopher number number_of_philosophers.
 Any other philosopher number N sits between philosopher number N - 1 and philosopher number N + 1.
 */
 
+void            waitsys(time_t timer);
+void            printeur(long time, int id, char *str, pthread_mutex_t print);
+/*action.c*/
+int             check_time_to_die(t_thread philo, pthread_mutex_t death);
+void            time_to_eat(t_thread *philo, pthread_mutex_t eat);
+void            time_to_sleep(t_thread *philo, pthread_mutex_t sleep);
+void            time_to_think(t_thread *philo, pthread_mutex_t think);
 /*init.c*/
 int             valid(int ac, char **av);
 int             read_future(t_info *info);
