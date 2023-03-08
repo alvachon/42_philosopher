@@ -15,26 +15,29 @@
 #define ERROR_DATA "Invalid data\n"
 #define ERROR_ID  "Invalid philo\n"
 #define ERROR_THREAD "Failed to create thread\n"
+
 typedef struct s_info
 {
-    long   start;
-    int    number_of_philosophers;
-    int    time_to_die;
-    int    time_to_eat;
-    int    time_to_sleep;
-    int    number_of_times_each_philosopher_must_eat;
-    int    will_die;
-    long   time_of_death;
+    long              start;
+    int               number_of_philosophers;
+    int               time_to_die;
+    int               time_to_eat;
+    int               time_to_sleep;
+    int               number_of_times_each_philosopher_must_eat;
+    int               will_die;
+    long              time_of_death;
+    pthread_mutex_t   *fork;
 }   t_info
 ;
 
 typedef struct s_thread
 {
-    int               thread_id;
-    pthread_mutex_t   a_fork;
-    long              last_meal;
-    int               nb_meal;
-    t_info            *reservation;
+    int             thread_id;
+    long            last_meal;
+    int             nb_meal;
+    int             r_fork;//
+    int             l_fork;//
+    t_info          *reservation;
 }   t_thread
 ;
 

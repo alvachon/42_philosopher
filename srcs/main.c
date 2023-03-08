@@ -46,10 +46,12 @@ int main(int ac, char **av)
     {
       info = malloc(sizeof(t_info));
       if (info == NULL)
-        exit(1);
-      array_thread = malloc(sizeof(t_thread) * ft_atoi(av[1]));
+        exit(1);//
       set_info(&info, ac, av);
-      while (t < ft_atoi(av[1]))
+      array_thread = malloc(sizeof(t_thread) * info->number_of_philosophers);
+      if (array_thread == NULL)
+        exit(1);//
+      while (t < info->number_of_philosophers)
       {
         set_thread(&array_thread[t], info, t + 1);
         if (pthread_create(threads + t, NULL, &start, (void *)&array_thread[t]) != 0)
@@ -58,7 +60,7 @@ int main(int ac, char **av)
         t++;
       }
       t = 0;
-      while (t < ft_atoi(av[1]))
+      while (t < info->number_of_philosophers)
       {
         if (pthread_join(threads[t], NULL) != 0)
           return (1);
@@ -70,4 +72,3 @@ int main(int ac, char **av)
     }
     return (0);
 }
-//desyncroniser 

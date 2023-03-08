@@ -80,14 +80,22 @@ void  set_info(t_info **info, int ac, char **av)
     (*info)->will_die = 1;
     (*info)->time_of_death = set_time_of_death(*info, r);
   }
+  r = 0;
+  (*info)->fork = malloc(sizeof (pthread_mutex_t) * (*info)->number_of_philosophers);
+  if ((*info)->fork == NULL)
+    exit(1);//
 }
 
 void  set_thread(t_thread *thread, t_info *info, int t)
 {
-  (void)*info;
   thread->thread_id = t;
-  pthread_mutex_init(&thread->a_fork, NULL);
+  thread->reservation = info;
   thread->last_meal = get_time() - info->start;
   thread->nb_meal = 0;
-  thread->reservation = info;
+  pthread_mutex_init(&thread->reservation->fork[t], NULL);
+  thread->l_fork = t;
+  if (info->number_of_philosophers % 2 != 0 && t == info->number_of_philosophers)
+    thread->r_fork = 0;
+  else
+    thread->r_fork = t + 1;
 }

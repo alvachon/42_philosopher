@@ -50,21 +50,18 @@ void    time_to_sleep(t_thread *philo, pthread_mutex_t sleep)
     pthread_mutex_unlock(&sleep);
 }
 
-//faire un choix selon le numero d'ID
-//unlock les fourchettes si meurt ?
-//array de fournette struct avec un id de 1 ou de 0
 void    time_to_eat(t_thread *philo, pthread_mutex_t eat)
 {
-    pthread_mutex_lock(&philo->a_fork);
+    pthread_mutex_lock(&philo->reservation->fork[philo->thread_id]);
     printeur(get_time() - philo->reservation->start, philo->thread_id, "as taken a fork", eat);
-    pthread_mutex_lock(&philo->a_fork + 1);
+    pthread_mutex_lock(&philo->reservation->fork[philo->thread_id + 1]);
     printeur(get_time() - philo->reservation->start, philo->thread_id, "as taken a fork", eat);
     printeur(get_time() - philo->reservation->start, philo->thread_id, "is eating", eat);
     waitsys(philo->reservation->time_to_eat);
     philo->last_meal = get_time() - philo->reservation->start;
     printeur(get_time() - philo->reservation->start, philo->thread_id, "as left a fork", eat);
-    pthread_mutex_unlock(&philo->a_fork);
+    pthread_mutex_unlock(&philo->reservation->fork[philo->thread_id]);
     printeur(get_time() - philo->reservation->start, philo->thread_id, "as left a fork", eat);
-    pthread_mutex_unlock(&philo->a_fork + 1);
+    pthread_mutex_unlock(&philo->reservation->fork[philo->thread_id + 1]);
     time_to_sleep(philo, eat);
 }
