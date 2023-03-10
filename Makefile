@@ -24,7 +24,7 @@ ARFLAGS			= rcs
 CC				= gcc
 CFLAGS			= -Wall -Wextra -Werror
 TFLAGS			= -pthread
-SFLAGS			= -fsanitize=thread
+SFLAGS			= #-fsanitize=thread
 
 # --- COLOR ---
 YELLOW			= '\033[0;33m'

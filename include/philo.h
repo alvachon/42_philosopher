@@ -18,14 +18,14 @@
 
 typedef struct s_info
 {
-    long              start;
+    time_t            start;
     int               number_of_philosophers;
-    int               time_to_die;
-    int               time_to_eat;
-    int               time_to_sleep;
+    time_t            time_to_die;
+    time_t            time_to_eat;
+    time_t            time_to_sleep;
     int               number_of_times_each_philosopher_must_eat;
     int               will_die;
-    long              time_of_death;
+    time_t            time_of_death;
     pthread_mutex_t   *fork;
 }   t_info
 ;
@@ -33,7 +33,7 @@ typedef struct s_info
 typedef struct s_thread
 {
     int             thread_id;
-    long            last_meal;
+    time_t          last_meal;
     int             nb_meal;
     int             r_fork;//
     int             l_fork;//
@@ -46,7 +46,7 @@ Philosopher number 1 sits next to philosopher number number_of_philosophers.
 Any other philosopher number N sits between philosopher number N - 1 and philosopher number N + 1.
 */
 
-void            waitsys(time_t timer);
+void            waitsys(int timer);
 void            printeur(long time, int id, char *str, pthread_mutex_t print);
 /*action.c*/
 int             check_time_to_die(t_thread philo, pthread_mutex_t death);

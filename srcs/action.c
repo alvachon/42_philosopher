@@ -21,15 +21,15 @@ void    printeur(long time, int id, char *str, pthread_mutex_t print)
 
 int  check_time_to_die(t_thread philo, pthread_mutex_t death)
 {
-  long            time;
+  long   time;
 
-  time = get_time() - philo.reservation->start;
-  if (time == philo.reservation->time_of_death && philo.reservation->will_die >= 1)
-  {
-    printeur(get_time() - philo.reservation->start, philo.thread_id, "died", death);
-    return (1);
-  }
-  return (0);
+    time = get_time() - philo.last_meal;
+    if (time > philo.reservation->time_to_die && philo.reservation->will_die >= 1)
+    {
+      printeur(get_time() - philo.reservation->start, philo.thread_id, "died", death);
+      return (1);
+    }
+    return (0);
 }
 
 void    time_to_think(t_thread *philo, pthread_mutex_t think)
@@ -54,7 +54,7 @@ void    time_to_eat(t_thread *philo, pthread_mutex_t eat)
 {
     pthread_mutex_lock(&philo->reservation->fork[philo->thread_id]);
     printeur(get_time() - philo->reservation->start, philo->thread_id, "as taken a fork", eat);
-    pthread_mutex_lock(&philo->reservation->fork[philo->thread_id + 1]);
+    pthread_mutex_lock(&philo->reservation->fork[philo->thread_id - 1]);
     printeur(get_time() - philo->reservation->start, philo->thread_id, "as taken a fork", eat);
     printeur(get_time() - philo->reservation->start, philo->thread_id, "is eating", eat);
     waitsys(philo->reservation->time_to_eat);
@@ -62,6 +62,6 @@ void    time_to_eat(t_thread *philo, pthread_mutex_t eat)
     printeur(get_time() - philo->reservation->start, philo->thread_id, "as left a fork", eat);
     pthread_mutex_unlock(&philo->reservation->fork[philo->thread_id]);
     printeur(get_time() - philo->reservation->start, philo->thread_id, "as left a fork", eat);
-    pthread_mutex_unlock(&philo->reservation->fork[philo->thread_id + 1]);
+    pthread_mutex_unlock(&philo->reservation->fork[philo->thread_id - 1]);
     time_to_sleep(philo, eat);
 }

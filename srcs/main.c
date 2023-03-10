@@ -1,16 +1,14 @@
 #include "../include/philo.h"
 
 //usleep 500
-void  waitsys(time_t timer)
+void  waitsys(int timer)
 {
-  time_t delay;
+  long time;
 
-  delay = get_time() + timer;
-  while (get_time() <= delay)
-  {
-    if (get_time() == delay)
-      return ;
-  }
+  time = get_time();
+  usleep(timer * 920);
+  while (get_time() < time + timer)
+    usleep(timer * 3);
 }
 
 void  *start(void *arg)
@@ -22,11 +20,21 @@ void  *start(void *arg)
   i = 0;
   philo = *(t_thread *)arg;
   pthread_mutex_init(&action, NULL);
+  pthread_mutex_lock(&action);
+  printf("philo.thread_id : %d,  last meal : %ld, time to die : %ld\n", philo.thread_id, philo.last_meal, philo.reservation->time_to_die);
+  pthread_mutex_unlock(&action);
   while (1)
   {
-    i = check_time_to_die(philo, action);
-    if (i == 1)
-      break ;
+    if (philo.last_meal != 0)
+    {
+        pthread_mutex_lock(&action);
+        printf("philo.thread_id : %d,  last meal : %ld, time to die : %ld\n", philo.thread_id, philo.last_meal, philo.reservation->time_to_die);
+        pthread_mutex_unlock(&action);
+      /*
+      i = check_time_to_die(philo, action);
+      if (i == 1)
+        break ;*/
+    }
     time_to_eat(&philo, action);
     time_to_think(&philo, action);
   }
@@ -53,8 +61,8 @@ int main(int ac, char **av)
         exit(1);//
       while (t < info->number_of_philosophers)
       {
-        set_thread(&array_thread[t], info, t + 1);
-        if (pthread_create(threads + t, NULL, &start, (void *)&array_thread[t]) != 0)
+        set_thread(&array_thread[t], info, t);
+        if (pthread_create(&threads[t], NULL, &start, &array_thread[t]) != 0)
           return (1);
         printf("Thread %d has started\n", t);
         t++;
