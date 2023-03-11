@@ -32,8 +32,8 @@ void init_philo(t_thread *philo_id, t_info *info, int t)
   (philo_id)->nb_meal = 0;
   (philo_id)->is_dead = 0;
   (philo_id)->last_meal = get_time();
-  (philo_id)->l_fork = &info->forks[t];
-  (philo_id)->r_fork = &info->forks[(t + 1) % info->number_of_philosophers];
+  (philo_id)->l_fork = info->forks[t];
+  (philo_id)->r_fork = info->forks[(t + 1) % info->number_of_philosophers];
   (philo_id)->info = info;
 }
 
@@ -53,7 +53,7 @@ void init_threads(t_info *info)
   while (t < info->number_of_philosophers)
   {
     init_philo(&array_philo[t], info, t);
-    if (pthread_create(&threads[t], NULL, &start, &array_philo[t] != 0))
+    if (pthread_create(&threads[t], NULL, &start, &(void *)array_philo[t] != 0))
       return (1);
     printf("Thread %d has started\n", t);
     t++;

@@ -16,17 +16,6 @@
 #define ERROR_ID  "Invalid philo\n"
 #define ERROR_THREAD "Failed to create thread\n"
 
-typedef struct s_thread
-{
-    int             thread_id;
-    time_t          last_meal;
-    int             nb_meal;
-    int             r_fork;//
-    int             l_fork;//
-    int             is_dead;
-    t_info          *info;
-}   t_thread
-;
 typedef struct s_info
 {
     time_t            start;
@@ -41,11 +30,21 @@ typedef struct s_info
     //int             dead;
     pthread_mutex_t   *forks;
     pthread_mutex_t   action;
-    t_thread          *array_keeper;
+    void              *array_keeper;
     pthread_t         *thread_keeper;
 }   t_info
 ;
-
+typedef struct s_thread
+{
+    int             thread_id;
+    time_t          last_meal;
+    int             nb_meal;
+    pthread_mutex_t r_fork;//
+    pthread_mutex_t l_fork;//
+    int             is_dead;
+    t_info          *info;
+}   t_thread
+;
 
 /*
 Philosopher number 1 sits next to philosopher number number_of_philosophers.

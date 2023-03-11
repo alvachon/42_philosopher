@@ -13,13 +13,23 @@ void  waitsys(int timer)
 
 int main(int ac, char **av)
 {
+  int     t;
   t_info  info;
 
   if (valid(ac, av) != 0 || init_info(&info, ac, av) != 0)
     return (1);
   init_mutexes(&info);
   init_threads(&info);
-
+  t = 0;
+  while (t < info.number_of_philosophers)
+  {
+    if (pthread_join(info.thread_keeper[t], NULL) != 0)
+      return (1);
+    printf("Thread %d has finished\n", t);
+      t++;
+  }
+    free(info.array_keeper);
+    free(info.thread_keeper);
   //clean (destroy action)
 }
 

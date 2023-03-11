@@ -12,8 +12,11 @@
 
 #include "../include/philo.h"
 
-int break_conditions(t_thread philo)
+int break_conditions(t_thread *philo)
 {
+  pthread_mutex_lock(&philo->info->action);
+  printf("time since start : %ld\n", get_time() - philo->info->start);
+  pthread_mutex_unlock(&philo->info->action);
     return (0);
 }
 
@@ -24,14 +27,14 @@ void  *start(void *arg)
   philo = *(t_thread *)arg;
   while (1)
   {
-    if (break_conditions(philo) != 0)
+    if (break_conditions(&philo) != 0)
         break ;
     time_to_eat(&philo);
-    if (break_conditions(philo) != 0)
-        break ;
+    /*if (break_conditions(&philo) != 0)
+        break ;*/
     time_to_sleep(&philo);
-    if (break_conditions(philo) != 0)
-        break ;
+   /* if (break_conditions(&philo) != 0)
+        break ;*/
     time_to_think(&philo);
   }
   return (0);
