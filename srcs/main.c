@@ -1,14 +1,59 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alvachon <marvin@42quebec.com>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/11 17:21:09 by alvachon          #+#    #+#             */
+/*   Updated: 2023/03/11 17:21:10 by alvachon         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/philo.h"
 
-//usleep 500
-void  waitsys(int timer)
+int break_conditions(t_thread *philo)
 {
-  long time;
+  time_t  timer;
 
-  time = get_time();
-  usleep(timer * 920);
-  while (get_time() < time + timer)
-    usleep(timer * 3);
+  timer = get_time();
+  if (timer - philo->last_meal >= philo->info->time_to_die)
+  {
+    printeur(get_time() - philo->info->start, philo->thread_id, "died", philo);
+    return (1);
+  }
+  if (philo->info->number_of_times_each_philosopher_must_eat == philo->nb_meal)
+    return (1);
+  if (philo->info->number_of_philosophers == 1)
+  {
+    waitsys(philo->info->time_to_die);
+    printeur(get_time() - philo->info->start, philo->thread_id, "died", philo);
+    return (1);
+  }
+  return (0);
+}
+
+void  *start(void *arg)
+{
+  t_thread        philo;//
+  
+  philo = *(t_thread *)arg;
+  while (1)
+  {
+    if (break_conditions(&philo) != 0)
+        break ;
+    if (philo.thread_id % 2 == 0 && philo.thread_id + 1 != philo.info->number_of_philosophers)
+      time_to_eat(&philo);
+    else
+      time_to_eat(&philo);
+    if (break_conditions(&philo) != 0)
+        break ;
+    time_to_sleep(&philo);
+   if (break_conditions(&philo) != 0)
+        break ;
+    time_to_think(&philo);
+  }
+  return (0);
 }
 
 int main(int ac, char **av)
@@ -32,43 +77,3 @@ int main(int ac, char **av)
     free(info.thread_keeper);
   //clean (destroy action)
 }
-
-/*
-int main(int ac, char **av)
-{
-    int             t;
-    t_info          *info;
-    t_thread        *array_thread;
-    pthread_t       threads[ft_atoi(av[1])];
-
-    t = 0;
-    if ((valid(ac, av) == 0))
-    {
-      info = malloc(sizeof(t_info));
-      if (info == NULL)
-        exit(1);//
-      set_info(&info, ac, av);
-      array_thread = malloc(sizeof(t_thread) * info->number_of_philosophers);
-      if (array_thread == NULL)
-        exit(1);//
-      while (t < info->number_of_philosophers)
-      {
-        set_thread(&array_thread[t], info, t);
-        if (pthread_create(&threads[t], NULL, &start, &array_thread[t]) != 0)
-          return (1);
-        printf("Thread %d has started\n", t);
-        t++;
-      }
-      t = 0;
-      while (t < info->number_of_philosophers)
-      {
-        if (pthread_join(threads[t], NULL) != 0)
-          return (1);
-        printf("Thread %d has finished\n", t);
-        t++;
-      }
-      free(array_thread);
-      free(info);
-    }
-    return (0);
-}*/

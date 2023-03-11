@@ -28,12 +28,11 @@ int valid(int ac, char **av)
 
 void init_philo(t_thread *philo_id, t_info *info, int t)
 {
-  (philo_id)->thread_id = t;
+  (philo_id)->thread_id = t + 1;
   (philo_id)->nb_meal = 0;
-  (philo_id)->is_dead = 0;
   (philo_id)->last_meal = get_time();
-  (philo_id)->l_fork = info->forks[t];
-  (philo_id)->r_fork = info->forks[(t + 1) % info->number_of_philosophers];
+  (philo_id)->l_fork = &info->forks[t];
+  (philo_id)->r_fork = &info->forks[(t + 1) % info->number_of_philosophers];
   (philo_id)->info = info;
 }
 
@@ -71,7 +70,7 @@ void  init_mutexes(t_info *info)
   forks = malloc(sizeof(pthread_mutex_t) * count);
   if (!forks)
     return ;
-  pthread_mutex_init(&info->action, NULL);
+  pthread_mutex_init(&info->print, NULL);
   while (count--)
     pthread_mutex_init(&forks[count], NULL);
   info->forks = forks;

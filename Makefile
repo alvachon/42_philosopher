@@ -7,11 +7,10 @@ REL_PATH		=	$(shell pwd)
 INCL_DIR		= ./include
 SRCS_DIR		= ./srcs
 OBJS_DIR		= ./objs
-SRCS			= $(SRCS_DIR)/init.c \
-				  $(SRCS_DIR)/lib.c \
+SRCS			= $(SRCS_DIR)/action.c \
+				  $(SRCS_DIR)/init.c \
 				  $(SRCS_DIR)/main.c \
-				  $(SRCS_DIR)/debug.c \
-				  $(SRCS_DIR)/action.c
+				  $(SRCS_DIR)/utils.c
 OBJS 			= $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 HDRS_FILE		= philo.h
 HDRS			= $(INCL_DIR)/$(HDRS_FILE)
@@ -24,7 +23,7 @@ ARFLAGS			= rcs
 CC				= gcc
 CFLAGS			= -Wall -Wextra -Werror
 TFLAGS			= -pthread
-SFLAGS			= #-fsanitize=thread
+SFLAGS			= -fsanitize=thread
 
 # --- COLOR ---
 YELLOW			= '\033[0;33m'
