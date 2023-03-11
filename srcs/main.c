@@ -11,37 +11,19 @@ void  waitsys(int timer)
     usleep(timer * 3);
 }
 
-void  *start(void *arg)
+int main(int ac, char **av)
 {
-  int             i;
-  t_thread        philo;
-  pthread_mutex_t action;
-  
-  i = 0;
-  philo = *(t_thread *)arg;
-  pthread_mutex_init(&action, NULL);
-  pthread_mutex_lock(&action);
-  printf("philo.thread_id : %d,  last meal : %ld, time to die : %ld\n", philo.thread_id, philo.last_meal, philo.reservation->time_to_die);
-  pthread_mutex_unlock(&action);
-  while (1)
-  {
-    if (philo.last_meal != 0)
-    {
-        pthread_mutex_lock(&action);
-        printf("philo.thread_id : %d,  last meal : %ld, time to die : %ld\n", philo.thread_id, philo.last_meal, philo.reservation->time_to_die);
-        pthread_mutex_unlock(&action);
-      /*
-      i = check_time_to_die(philo, action);
-      if (i == 1)
-        break ;*/
-    }
-    time_to_eat(&philo, action);
-    time_to_think(&philo, action);
-  }
-  pthread_mutex_destroy(&action);
-  return (0);
+  t_info  info;
+
+  if (valid(ac, av) != 0 || init_info(&info, ac, av) != 0)
+    return (1);
+  init_mutexes(&info);
+  init_threads(&info);
+
+  //clean (destroy action)
 }
 
+/*
 int main(int ac, char **av)
 {
     int             t;
@@ -79,4 +61,4 @@ int main(int ac, char **av)
       free(info);
     }
     return (0);
-}
+}*/

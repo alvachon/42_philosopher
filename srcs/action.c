@@ -12,56 +12,56 @@
 
 #include "../include/philo.h"
 
-void    printeur(long time, int id, char *str, pthread_mutex_t print)
+void    printeur(long time, int id, char *str, t_thread *philo)
 {
-    pthread_mutex_lock(&print);
+    pthread_mutex_lock(&philo->info->action);
     printf("%ld\t%d\t%s\n", time, id, str);
-    pthread_mutex_unlock(&print);
+    pthread_mutex_unlock(&philo->info->action);
 }
 
-int  check_time_to_die(t_thread philo, pthread_mutex_t death)
+/*int  check_time_to_die(t_thread philo, pthread_mutex_t death)
 {
   long   time;
 
     time = get_time() - philo.last_meal;
-    if (time > philo.reservation->time_to_die && philo.reservation->will_die >= 1)
+    if (time > philo.info->time_to_die && philo.info->will_die >= 1)
     {
-      printeur(get_time() - philo.reservation->start, philo.thread_id, "died", death);
+      printeur(get_time() - philo.info->start, philo.thread_id, "died", death);
       return (1);
     }
     return (0);
+}*/
+
+void    time_to_think(t_thread *philo)
+{
+    long    time;
+
+    time = get_time() - philo->info->start;
+    printeur(get_time() - philo->info->start, philo->thread_id, "is thinking", philo);
 }
 
-void    time_to_think(t_thread *philo, pthread_mutex_t think)
+void    time_to_sleep(t_thread *philo)
 {
-    long            time;
-
-    time = get_time() - philo->reservation->start;
-    printeur(get_time() - philo->reservation->start, philo->thread_id, "is thinking", think);
-}
-
-void    time_to_sleep(t_thread *philo, pthread_mutex_t sleep)
-{
-    long            time;
+    long    time;
     
-    time = get_time() - philo->reservation->start;
-    printeur(get_time() - philo->reservation->start, philo->thread_id, "is sleeping", sleep);
-    waitsys(philo->reservation->time_to_sleep);
-    pthread_mutex_unlock(&sleep);
+    time = get_time() - philo->info->start;
+    printeur(get_time() - philo->info->start, philo->thread_id, "is sleeping", philo);
+    pthread_mutex_lock(&philo->info->action);
+    waitsys(philo->info->time_to_sleep);
+    pthread_mutex_unlock(&philo->info->action);
 }
 
-void    time_to_eat(t_thread *philo, pthread_mutex_t eat)
+void    time_to_eat(t_thread *philo)
 {
-    pthread_mutex_lock(&philo->reservation->fork[philo->thread_id]);
-    printeur(get_time() - philo->reservation->start, philo->thread_id, "as taken a fork", eat);
-    pthread_mutex_lock(&philo->reservation->fork[philo->thread_id - 1]);
-    printeur(get_time() - philo->reservation->start, philo->thread_id, "as taken a fork", eat);
-    printeur(get_time() - philo->reservation->start, philo->thread_id, "is eating", eat);
-    waitsys(philo->reservation->time_to_eat);
-    philo->last_meal = get_time() - philo->reservation->start;
-    printeur(get_time() - philo->reservation->start, philo->thread_id, "as left a fork", eat);
-    pthread_mutex_unlock(&philo->reservation->fork[philo->thread_id]);
-    printeur(get_time() - philo->reservation->start, philo->thread_id, "as left a fork", eat);
-    pthread_mutex_unlock(&philo->reservation->fork[philo->thread_id - 1]);
-    time_to_sleep(philo, eat);
+    pthread_mutex_lock(&philo->info->forks[philo->l_fork]);
+    printeur(get_time() - philo->info->start, philo->thread_id, "as taken a fork", philo);
+    pthread_mutex_lock(&philo->info->forks[philo->r_fork]);
+    printeur(get_time() - philo->info->start, philo->thread_id, "as taken a fork", philo);
+    printeur(get_time() - philo->info->start, philo->thread_id, "is eating", philo);
+    waitsys(philo->info->time_to_eat);
+    philo->last_meal = get_time() - philo->info->start;
+    printeur(get_time() - philo->info->start, philo->thread_id, "as left a fork", philo);
+    pthread_mutex_unlock(&philo->info->forks[philo->l_fork]);
+    printeur(get_time() - philo->info->start, philo->thread_id, "as left a fork", philo);
+    pthread_mutex_unlock(&philo->info->forks[philo->r_fork]);
 }

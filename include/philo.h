@@ -16,20 +16,6 @@
 #define ERROR_ID  "Invalid philo\n"
 #define ERROR_THREAD "Failed to create thread\n"
 
-typedef struct s_info
-{
-    time_t            start;
-    int               number_of_philosophers;
-    time_t            time_to_die;
-    time_t            time_to_eat;
-    time_t            time_to_sleep;
-    int               number_of_times_each_philosopher_must_eat;
-    int               will_die;
-    time_t            time_of_death;
-    pthread_mutex_t   *fork;
-}   t_info
-;
-
 typedef struct s_thread
 {
     int             thread_id;
@@ -37,28 +23,51 @@ typedef struct s_thread
     int             nb_meal;
     int             r_fork;//
     int             l_fork;//
-    t_info          *reservation;
+    int             is_dead;
+    t_info          *info;
 }   t_thread
 ;
+typedef struct s_info
+{
+    time_t            start;
+    int               number_of_philosophers;
+    int               time_to_die;
+    int               time_to_eat;
+    int               time_to_sleep;
+    int               number_of_times_each_philosopher_must_eat;
+    /*int             will_die;
+    time_t            time_of_death;*/
+    //int             philo_id;
+    //int             dead;
+    pthread_mutex_t   *forks;
+    pthread_mutex_t   action;
+    t_thread          *array_keeper;
+    pthread_t         *thread_keeper;
+}   t_info
+;
+
 
 /*
 Philosopher number 1 sits next to philosopher number number_of_philosophers.
 Any other philosopher number N sits between philosopher number N - 1 and philosopher number N + 1.
 */
 
+/*debug*/
+void    *start(void *arg);
+
 void            waitsys(int timer);
-void            printeur(long time, int id, char *str, pthread_mutex_t print);
 /*action.c*/
 int             check_time_to_die(t_thread philo, pthread_mutex_t death);
-void            time_to_eat(t_thread *philo, pthread_mutex_t eat);
-void            time_to_sleep(t_thread *philo, pthread_mutex_t sleep);
-void            time_to_think(t_thread *philo, pthread_mutex_t think);
+void            time_to_eat(t_thread *philo);
+void            time_to_sleep(t_thread *philo);
+void            time_to_think(t_thread *philo);
 /*init.c*/
-int             valid(int ac, char **av);
-int             read_future(t_info *info);
-void            set_info(t_info **info, int ac, char **av);
-void            set_thread(t_thread *thread, t_info *info, int t);
-//int             init(t_info **reservation, int ac, char **av);
+int     valid(int ac, char **av);
+void    init_philo(t_thread *philo_id, t_info *info, int t);
+void    init_threads(t_info *info);
+void    init_mutexes(t_info *info);
+int     init_info(t_info *info, int ac, char **av);
+
 /*lib.c*/
 int	            ft_strcmp(char *s1, char *s2);
 long            get_time(void);
