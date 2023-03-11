@@ -53,8 +53,8 @@ void init_threads(t_info *info)
   while (t < info->number_of_philosophers)
   {
     init_philo(&array_philo[t], info, t);
-    if (pthread_create(&threads[t], NULL, &start, &(void *)array_philo[t] != 0))
-      return (1);
+    if (pthread_create(&threads[t], NULL, &start, (void *)&array_philo[t]) != 0)
+      return ;
     printf("Thread %d has started\n", t);
     t++;
   }
@@ -88,4 +88,5 @@ int  init_info(t_info *info, int ac, char **av)
     info->number_of_times_each_philosopher_must_eat = -1;
   if (ac == 6)
     info->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
+  return (0);
 }

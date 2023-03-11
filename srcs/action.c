@@ -53,15 +53,15 @@ void    time_to_sleep(t_thread *philo)
 
 void    time_to_eat(t_thread *philo)
 {
-    pthread_mutex_lock(&philo->info->forks[philo->l_fork]);
+    pthread_mutex_lock(&philo->l_fork);
     printeur(get_time() - philo->info->start, philo->thread_id, "as taken a fork", philo);
-    pthread_mutex_lock(&philo->info->forks[philo->r_fork]);
+    pthread_mutex_lock(&philo->r_fork);
     printeur(get_time() - philo->info->start, philo->thread_id, "as taken a fork", philo);
     printeur(get_time() - philo->info->start, philo->thread_id, "is eating", philo);
     waitsys(philo->info->time_to_eat);
     philo->last_meal = get_time() - philo->info->start;
     printeur(get_time() - philo->info->start, philo->thread_id, "as left a fork", philo);
-    pthread_mutex_unlock(&philo->info->forks[philo->l_fork]);
+    pthread_mutex_unlock(&philo->l_fork);
     printeur(get_time() - philo->info->start, philo->thread_id, "as left a fork", philo);
-    pthread_mutex_unlock(&philo->info->forks[philo->r_fork]);
+    pthread_mutex_unlock(&philo->r_fork);
 }
