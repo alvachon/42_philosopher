@@ -21,17 +21,11 @@ void    printeur(long time, int id, char *str, t_thread *philo)
 
 void    time_to_think(t_thread *philo)
 {
-    long    time;
-    
-    time = get_time() - philo->info->start;
     printeur(get_time() - philo->info->start, philo->thread_id, "is thinking", philo);
 }
 
 void    time_to_sleep(t_thread *philo)
 {
-    long    time;
- 
-    time = get_time() - philo->info->start;
     printeur(get_time() - philo->info->start, philo->thread_id, "is sleeping", philo);
     waitsys(philo->info->time_to_sleep);
 }

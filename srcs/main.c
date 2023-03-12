@@ -65,8 +65,7 @@ void kill_threads(t_info *info)
   {
     if (pthread_join(info->thread_keeper[t], NULL) != 0)
       return ;
-    printf("Thread %d has finished\n", t);
-      t++;
+    t++;
   }
 }
 

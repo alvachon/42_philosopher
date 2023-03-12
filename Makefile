@@ -64,6 +64,6 @@ valgrind:
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./philosopher 2 6 2 2
 #data race
 helgrind:
-	valgrind --tool=helgrind ./philosopher 1 2 3 4
+	valgrind --tool=helgrind ./philosopher 3 5 3 3
 
 .PHONY:	all clean fclean re init
