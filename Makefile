@@ -22,8 +22,8 @@ AR				= ar
 ARFLAGS			= rcs
 CC				= gcc
 CFLAGS			= -Wall -Wextra -Werror
-TFLAGS			= -pthread
-SFLAGS			= -fsanitize=thread
+TFLAGS			= #-pthread
+SFLAGS			= #-fsanitize=thread
 
 # --- COLOR ---
 YELLOW			= '\033[0;33m'
@@ -58,10 +58,12 @@ fclean: clean
 
 re: fclean all
 
+#Need to remove SFLAGS
+#leaks
 valgrind:
-	valgrind --leak-check=full --show-leak-kinds=all ./philosopher 2 3 2 5
-
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./philosopher 2 6 2 2
+#data race
 helgrind:
-	valgrind --tool=helgrind ./philosopher 2 3 2 5
+	valgrind --tool=helgrind ./philosopher 1 2 3 4
 
 .PHONY:	all clean fclean re init

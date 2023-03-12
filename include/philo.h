@@ -8,22 +8,14 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-#define ERROR_ARG "Invalid argument quantity\n"
-#define ERROR_INPUT "Invalid Input\n"
-#define ERROR_RANGE "Invalid range\n"
-#define MEM_MALLOC  "Not enough space to allocate\n"
-#define ERROR_DATA "Invalid data\n"
-#define ERROR_ID  "Invalid philo\n"
-#define ERROR_THREAD "Failed to create thread\n"
-
 typedef struct s_info
 {
-    time_t            start;//
-    int               number_of_philosophers;//
-    time_t            time_to_die;//
-    int               time_to_eat;//
-    int               time_to_sleep;//
-    int               number_of_times_each_philosopher_must_eat;//
+    time_t            start;
+    int               number_of_philosophers;
+    time_t            time_to_die;
+    int               time_to_eat;
+    int               time_to_sleep;
+    int               number_of_times_each_philosopher_must_eat;
     pthread_mutex_t   *forks;//
     pthread_mutex_t   print;//
     void              *array_keeper;//

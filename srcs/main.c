@@ -56,24 +56,42 @@ void  *start(void *arg)
   return (0);
 }
 
+void kill_threads(t_info *info)
+{
+  int  t;
+
+  t = 0;
+  while (t < info->number_of_philosophers)
+  {
+    if (pthread_join(info->thread_keeper[t], NULL) != 0)
+      return ;
+    printf("Thread %d has finished\n", t);
+      t++;
+  }
+}
+
+void  kill_mutexes(t_info *info)
+{
+  int count;
+
+  count = info->number_of_philosophers;
+  while (count--)
+    pthread_mutex_destroy(&info->forks[count]);
+  pthread_mutex_destroy(&info->print);
+
+}
+
 int main(int ac, char **av)
 {
-  int     t;
   t_info  info;
 
   if (valid(ac, av) != 0 || init_info(&info, ac, av) != 0)
     return (1);
   init_mutexes(&info);
   init_threads(&info);
-  t = 0;
-  while (t < info.number_of_philosophers)
-  {
-    if (pthread_join(info.thread_keeper[t], NULL) != 0)
-      return (1);
-    printf("Thread %d has finished\n", t);
-      t++;
-  }
-    free(info.array_keeper);
-    free(info.thread_keeper);
-  //clean (destroy action)
+  kill_threads(&info);
+  kill_mutexes(&info);
+  free(info.array_keeper);
+  free(info.thread_keeper);
+  free(info.forks);
 }
