@@ -1,123 +1,97 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alvachon <marvin@42quebec.com>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/11 17:21:09 by alvachon          #+#    #+#             */
+/*   Updated: 2023/03/11 17:21:10 by alvachon         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/philo.h"
 
-void  waitsys(time_t timer)
+int break_conditions(t_thread *philo)
 {
-  time_t delay;
+  time_t  timer;
 
-  delay = get_time() + timer;
-  while (get_time() < delay)
-    usleep(50);
-}
-
-void  time_to_sleep(t_thread *thread_data, pthread_mutex_t  *mutex)
-{
-  long  timestamp_in_ms;
-  pthread_mutex_lock(&*mutex);
-  timestamp_in_ms = get_time() - thread_data->reservation->start;
-  printf("%ld %d %s\n", timestamp_in_ms, thread_data->thread_id, "is sleeping");
-  waitsys(thread_data->reservation->time_to_sleep);
-  pthread_mutex_unlock(&*mutex);
-  return ;
-}
-
-void  time_to_eat(t_thread  *thread_data, pthread_mutex_t  *mutex)
-{
-  long  timestamp_in_ms;
-  pthread_mutex_lock(&*mutex);
-  timestamp_in_ms = get_time() - thread_data->reservation->start;
-  printf("%ld %d %s\n", timestamp_in_ms, thread_data->thread_id, "is eating");
-  thread_data->eat = 1;
-  waitsys(thread_data->reservation->time_to_eat);
-  pthread_mutex_unlock(&*mutex);
-  time_to_sleep(&*thread_data, &*mutex);
-}
-
-void  thinking(t_thread  *thread_data, pthread_mutex_t  *mutex)
-{
-  long  timestamp_in_ms;
-  pthread_mutex_lock(&*mutex);
-  timestamp_in_ms = get_time() - thread_data->reservation->start;
-  printf("%ld %d %s\n", timestamp_in_ms, thread_data->thread_id, "is thinking");
-  pthread_mutex_unlock(&*mutex);
-  return ;
-}
-
-void  *routine(void *arg)
-{
-  pthread_mutex_t  mutex;
-  t_thread         thread_data;
-  int              loop;
-
-  loop = 5;
-  pthread_mutex_init(&mutex, NULL);
-  thread_data = *(t_thread *)arg;
-  if ((thread_data.team == 'R' && thread_data.eat == 0) \
-    && (thread_data.team == 'B' && thread_data.eat == 0))
-    {
-      if (thread_data.team == 'R')
-        time_to_eat(&thread_data, &mutex);
-      else
-        thinking(&thread_data, &mutex);
-    }
-  while (loop > 0)
+  timer = get_time();
+  if (timer - philo->last_meal >= philo->info->time_to_die)
   {
-    time_to_eat(&thread_data, &mutex);
-    thinking(&thread_data, &mutex);
-    loop--;
+    printeur(get_time() - philo->info->start, philo->thread_id, "died", philo);
+    return (1);
   }
-  pthread_mutex_destroy(&mutex);
+  if (philo->info->number_of_times_each_philosopher_must_eat == philo->nb_meal)
+    return (1);
+  if (philo->info->number_of_philosophers == 1)
+  {
+    waitsys(philo->info->time_to_die);
+    printeur(get_time() - philo->info->start, philo->thread_id, "died", philo);
+    return (1);
+  }
+  return (0);
+}
+
+void  *start(void *arg)
+{
+  t_thread        philo;//
+  
+  philo = *(t_thread *)arg;
+  while (1)
+  {
+    if (break_conditions(&philo) != 0)
+        break ;
+    if (philo.thread_id % 2 == 0 && philo.thread_id + 1 != philo.info->number_of_philosophers)
+      time_to_eat(&philo);
+    else
+      time_to_eat(&philo);
+    if (break_conditions(&philo) != 0)
+        break ;
+    time_to_sleep(&philo);
+   if (break_conditions(&philo) != 0)
+        break ;
+    time_to_think(&philo);
+  }
   return (0);
 }
 
-void  set_team(int t, t_thread  *thread_data_array, t_info *reservation)
+void kill_threads(t_info *info)
 {
-  thread_data_array->thread_id = t + 1;
-  thread_data_array->reservation = reservation;
-  if ((t + 1) == reservation->number_of_philosophers && reservation->number_of_philosophers % 2 != 0)
-    thread_data_array->team = 'V';
-  else if ((t + 1) % 2 == 0)
-    thread_data_array->team = 'R';
-  else
-    thread_data_array->team = 'B';
+  int  t;
+
+  t = 0;
+  while (t < info->number_of_philosophers)
+  {
+    if (pthread_join(info->thread_keeper[t], NULL) != 0)
+      return ;
+    printf("Thread %d has finished\n", t);
+      t++;
+  }
 }
 
-int start(t_info *reservation)
+void  kill_mutexes(t_info *info)
 {
-  int        t;
-  pthread_t  threads[reservation->number_of_philosophers];
-  t_thread   thread_data_array[reservation->number_of_philosophers];
+  int count;
 
-  t = 0;
-  while (t < reservation->number_of_philosophers)
-  {
-    set_team(t, &thread_data_array[t], reservation);
-    if (pthread_create(threads + t, NULL, &routine, (void *)&thread_data_array[t]) != 0)
-      return (1);
-    printf("Thread %d has started\n", t);
-    t++;
-  }
-  t = 0;
-  while (t < reservation->number_of_philosophers)
-  {
-    if (pthread_join(threads[t], NULL) != 0)
-      return (1);
-    printf("Thread %d has finished execution\n", t);
-    t++;
-  }
-  return (0);
+  count = info->number_of_philosophers;
+  while (count--)
+    pthread_mutex_destroy(&info->forks[count]);
+  pthread_mutex_destroy(&info->print);
+
 }
 
 int main(int ac, char **av)
 {
-    t_info      *reservation;
+  t_info  info;
 
-    reservation = NULL;
-    if ((valid(ac, av) == 0) && (init(&reservation, ac, av) == 0))
-    {
-        if (start(reservation) != 0)
-           clean_exit(&reservation, 4, ERROR_THREAD);
-    }
-    else
-      printf("nope\n");
-    return (0);
+  if (valid(ac, av) != 0 || init_info(&info, ac, av) != 0)
+    return (1);
+  init_mutexes(&info);
+  init_threads(&info);
+  kill_threads(&info);
+  kill_mutexes(&info);
+  free(info.array_keeper);
+  free(info.thread_keeper);
+  free(info.forks);
 }
