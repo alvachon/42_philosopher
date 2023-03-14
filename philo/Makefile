@@ -61,6 +61,6 @@ re: fclean all
 #Need to remove SFLAGS to test Valgrind
 #leaks
 valgrind:
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./philosopher 2 6 2 2 2
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./philo 10 10 20 20
 
 .PHONY:	all clean fclean re init

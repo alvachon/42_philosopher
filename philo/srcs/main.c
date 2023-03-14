@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 17:21:09 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/14 10:34:13 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/14 12:45:26 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	break_conditions(t_thread *philo)
 		return (1);
 	if (philo->info->number_of_philosophers == 1)
 	{
-		waitsys(philo->info->time_to_die);
+		usleep((philo)->info->time_to_die * 1000);
 		printeur(get_time() - philo->info->start, philo->thread_id, "died", \
 				philo);
 		return (1);

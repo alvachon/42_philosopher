@@ -6,28 +6,22 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 17:20:19 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/14 10:30:53 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/14 12:45:32 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-long	get_time(void)
+long int	get_time(void)
 {
-	struct timeval	time;
+	long int		time;
+	struct timeval	current_time;
 
-	gettimeofday(&time, NULL);
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
-}
-
-void	waitsys(int micro_seconds)
-{
-	long	time;
-
-	time = get_time();
-	usleep(micro_seconds * 920);
-	while (get_time() < time + micro_seconds)
-		usleep(micro_seconds * 3);
+	time = 0;
+	if (gettimeofday(&current_time, NULL) == -1)
+		exit(1);
+	time = (current_time.tv_sec * 1000) + (current_time.tv_usec / 1000);
+	return (time);
 }
 
 int	is_num(char *str)
@@ -68,3 +62,5 @@ int	ft_atoi(char *str)
 	}
 	return (nb * sign);
 }
+
+//ft_exit();
