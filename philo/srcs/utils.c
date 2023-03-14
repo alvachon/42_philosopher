@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alvachon <marvin@42quebec.com>             +#+  +:+       +#+        */
+/*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 17:20:19 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/11 17:20:20 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/14 10:30:53 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,20 @@
 
 long	get_time(void)
 {
-    struct timeval time; 
-    gettimeofday(&time, NULL); // get current time
-    return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void  waitsys(int micro_seconds)
+void	waitsys(int micro_seconds)
 {
-  long time;
+	long	time;
 
-  time = get_time();
-  usleep(micro_seconds * 920);
-  while (get_time() < time + micro_seconds)
-    usleep(micro_seconds * 3);
+	time = get_time();
+	usleep(micro_seconds * 920);
+	while (get_time() < time + micro_seconds)
+		usleep(micro_seconds * 3);
 }
 
 int	is_num(char *str)
@@ -37,11 +38,11 @@ int	is_num(char *str)
 	if (*str == '+')
 		str++;
 	while (str[i] >= '0' && str[i] <= '9')
-	  i++;
+		i++;
 	if (str[i] == '\0')
-	  return (0);
+		return (0);
 	else if (!(str[i] >= '0' && str[i] <= '9'))
-	  return (1);
+		return (1);
 	return (1);
 }
 
