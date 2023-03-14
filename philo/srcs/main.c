@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 17:21:09 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/14 12:45:26 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/14 14:54:25 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int	break_conditions(t_thread *philo)
 	{
 		printeur(get_time() - philo->info->start, philo->thread_id, "died", \
 				philo);
+		pthread_mutex_lock(&philo->info->print);
+		philo->info->died = 1;
 		return (1);
 	}
 	if (philo->info->nb_of_times_each_philosopher_must_eat == philo->nb_meal)
@@ -30,6 +32,8 @@ int	break_conditions(t_thread *philo)
 		usleep((philo)->info->time_to_die * 1000);
 		printeur(get_time() - philo->info->start, philo->thread_id, "died", \
 				philo);
+		pthread_mutex_lock(&philo->info->print);
+		philo->info->died = 1;
 		return (1);
 	}
 	return (0);
@@ -68,6 +72,8 @@ void	kill_threads(t_info *info)
 	{
 		if (pthread_join(info->thread_keeper[t], NULL) != 0)
 			return ;
+		if (info->died == 1)
+			return ;
 		t++;
 	}
 }
@@ -87,12 +93,10 @@ int	main(int ac, char **av)
 	t_info	info;
 
 	if (valid(ac, av) != 0 || init_info(&info, ac, av) != 0)
-		return (1);
+		clean_exit(1, NULL);
 	init_mutexes(&info);
 	init_threads(&info);
 	kill_threads(&info);
 	kill_mutexes(&info);
-	free(info.array_keeper);
-	free(info.thread_keeper);
-	free(info.forks);
+	clean_exit(4, &info);
 }

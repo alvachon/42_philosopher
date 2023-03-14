@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 17:20:19 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/14 12:45:32 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/14 14:40:51 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,14 @@ int	ft_atoi(char *str)
 	return (nb * sign);
 }
 
-//ft_exit();
+int	clean_exit(int code, t_info *info)
+{
+	if (code == 2 || code == 3 || code == 4)
+		free(info->forks);
+	if (code == 3 || code == 4)
+		free(info->array_keeper);
+	if (code == 4)
+		free (info->thread_keeper);
+	return (1);
+
+}

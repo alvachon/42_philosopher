@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 10:32:47 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/14 12:31:04 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/14 14:54:19 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_info
 	int				nb_of_times_each_philosopher_must_eat;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print;
+	int				died;
 	void			*array_keeper;
 	pthread_t		*thread_keeper;
 }					t_info;
@@ -54,9 +55,9 @@ void				init_mutexes(t_info *info);
 int					init_info(t_info *info, int ac, char **av);
 /*utils*/
 long int			get_time(void);
-void				waitsys(long int ms_time);
 int					is_num(char *str);
 int					ft_atoi(char *str);
+int					clean_exit(int code, t_info *info);
 /*action.c*/
 void				printeur(long int time, int id, char *str, t_thread *philo);
 void				time_to_think(t_thread *philo);

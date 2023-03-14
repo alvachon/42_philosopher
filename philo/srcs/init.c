@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 15:16:24 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/14 12:38:21 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/14 14:54:16 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int	valid(int ac, char **av)
 	while (ac-- > 1)
 	{
 		if (is_num(av[ac]) == 1)
-			return (1);
+			clean_exit(1, NULL);
 		if (ft_atoi(av[ac]) > INT_MAX || ft_atoi(av[ac]) < 0)
-			return (1);
+			clean_exit(1, NULL);
 	}
 	return (0);
 }
@@ -44,15 +44,17 @@ void	init_threads(t_info *info)
 
 	array_philo = malloc(sizeof(t_thread) * info->number_of_philosophers);
 	if (!array_philo)
-		return ;
+		clean_exit(2, info);
+	info->array_keeper = array_philo;
 	threads = malloc(sizeof(pthread_t) * info->number_of_philosophers);
 	if (!threads)
-		return ;
+		clean_exit(3, info);
+	info->thread_keeper = threads;
 	t = 0;
 	while (t < info->number_of_philosophers)
 	{
 		init_philo(&array_philo[t], info, t);
-		if (pthread_create(&threads[t], NULL, &start,
+		if (pthread_create(&threads[t], NULL, &start, \
 				(void *)&array_philo[t]) != 0)
 			return ;
 		t++;
@@ -69,7 +71,8 @@ void	init_mutexes(t_info *info)
 	count = info->number_of_philosophers;
 	forks = malloc(sizeof(pthread_mutex_t) * count);
 	if (!forks)
-		return ;
+		clean_exit(1, NULL);
+	info->forks = forks;
 	pthread_mutex_init(&info->print, NULL);
 	while (count--)
 		pthread_mutex_init(&forks[count], NULL);
@@ -87,5 +90,6 @@ int	init_info(t_info *info, int ac, char **av)
 		info->nb_of_times_each_philosopher_must_eat = -1;
 	if (ac == 6)
 		info->nb_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
+	info->died = 0;
 	return (0);
 }
