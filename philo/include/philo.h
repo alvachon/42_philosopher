@@ -16,20 +16,20 @@ typedef struct s_info
     int               time_to_eat;
     int               time_to_sleep;
     int               number_of_times_each_philosopher_must_eat;
-    pthread_mutex_t   *forks;//
-    pthread_mutex_t   print;//
-    void              *array_keeper;//
-    pthread_t         *thread_keeper;//
+    pthread_mutex_t   *forks;
+    pthread_mutex_t   print;
+    void              *array_keeper;
+    pthread_t         *thread_keeper;
 }   t_info
 ;
 typedef struct s_thread
 {
-    int             thread_id;//
-    time_t          last_meal;//
-    int             nb_meal;//
-    pthread_mutex_t *r_fork;//
-    pthread_mutex_t *l_fork;//
-    t_info          *info;//
+    int             thread_id;
+    time_t          last_meal;
+    int             nb_meal;
+    pthread_mutex_t *r_fork;
+    pthread_mutex_t *l_fork;
+    t_info          *info;
 }   t_thread
 ;
 
@@ -42,7 +42,7 @@ void            init_philo(t_thread *philo_id, t_info *info, int t);
 void            init_threads(t_info *info);
 void            init_mutexes(t_info *info);
 int             init_info(t_info *info, int ac, char **av);
-/*lib*/         //utils
+/*utils*/
 long	        get_time(void);
 void            waitsys(int micro_seconds);
 int	            is_num(char *str);

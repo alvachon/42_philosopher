@@ -54,7 +54,6 @@ void init_threads(t_info *info)
     init_philo(&array_philo[t], info, t);
     if (pthread_create(&threads[t], NULL, &start, (void *)&array_philo[t]) != 0)
       return ;
-    printf("Thread %d has started\n", t);
     t++;
   }
   info->array_keeper = array_philo;
