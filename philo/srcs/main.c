@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 17:21:09 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/14 14:54:25 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/15 16:59:10 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,36 @@
 
 int	break_conditions(t_thread *philo)
 {
-	time_t	timer;
+	time_t		timer;
+	long int	time_of_death;
 
-	timer = get_time();
-	if (timer - philo->last_meal >= philo->info->time_to_die)
+	if (philo->info->died == 0)
 	{
-		printeur(get_time() - philo->info->start, philo->thread_id, "died", \
-				philo);
-		pthread_mutex_lock(&philo->info->print);
-		philo->info->died = 1;
-		return (1);
+		timer = get_time();
+		time_of_death = timer - philo->last_meal;
+		if (time_of_death >= philo->info->time_to_die || \
+			(philo->info->number_of_philosophers == 1))
+		{
+			if (philo->info->number_of_philosophers == 1)
+				usleep((philo)->info->time_to_die * 1000);
+			pthread_mutex_lock(&philo->info->print);
+			philo->info->died = philo->thread_id;
+			philo->info->time_of_death = time_of_death;
+			pthread_mutex_unlock(&philo->info->print);
+			return (1);
+		}
+		if (philo->info->nb_of_times_each_philosopher_must_eat == \
+			philo->nb_meal)
+		{
+			pthread_mutex_lock(&philo->info->print);
+			philo->info->died = philo->thread_id;
+			philo->info->time_of_death = 0;
+			pthread_mutex_unlock(&philo->info->print);
+			return (1);
+		}
+		return (0);
 	}
-	if (philo->info->nb_of_times_each_philosopher_must_eat == philo->nb_meal)
-		return (1);
-	if (philo->info->number_of_philosophers == 1)
-	{
-		usleep((philo)->info->time_to_die * 1000);
-		printeur(get_time() - philo->info->start, philo->thread_id, "died", \
-				philo);
-		pthread_mutex_lock(&philo->info->print);
-		philo->info->died = 1;
-		return (1);
-	}
-	return (0);
+	return (1);
 }
 
 void	*start(void *arg)
@@ -44,59 +51,48 @@ void	*start(void *arg)
 	t_thread	philo;
 
 	philo = *(t_thread *)arg;
+	if (philo.thread_id % 2 == 0 && philo.thread_id + 1 != philo.info->number_of_philosophers) \
+		time_to_eat(&philo);
 	while (1)
 	{
-		if (break_conditions(&philo) != 0)
+		if (time_to_eat(&philo) == 1)
 			break ;
-		if (philo.thread_id % 2 == 0 && philo.thread_id
-			+ 1 != philo.info->number_of_philosophers)
-			time_to_eat(&philo);
-		else
-			time_to_eat(&philo);
-		if (break_conditions(&philo) != 0)
+		if (time_to_sleep(&philo) == 1)
 			break ;
-		time_to_sleep(&philo);
-		if (break_conditions(&philo) != 0)
+		if (time_to_think(&philo) == 1)
 			break ;
-		time_to_think(&philo);
 	}
 	return (0);
 }
 
-void	kill_threads(t_info *info)
+void	death_checker(t_info *info)
 {
-	int	t;
-
-	t = 0;
-	while (t < info->number_of_philosophers)
+	while (1)
 	{
-		if (pthread_join(info->thread_keeper[t], NULL) != 0)
-			return ;
-		if (info->died == 1)
-			return ;
-		t++;
+
+		if (info->died >= 1)
+		{
+			pthread_mutex_lock(&info->print);
+			if (info->time_of_death != 0)
+				printf("%ld\t%d\t%s\n", info->time_of_death, info->died, DIED);
+			pthread_mutex_unlock(&info->print);
+			break ;
+		}
 	}
-}
-
-void	kill_mutexes(t_info *info)
-{
-	int	count;
-
-	count = info->number_of_philosophers;
-	while (count--)
-		pthread_mutex_destroy(&info->forks[count]);
-	pthread_mutex_destroy(&info->print);
 }
 
 int	main(int ac, char **av)
 {
 	t_info	info;
+	int		t;
 
+	t = 0;
 	if (valid(ac, av) != 0 || init_info(&info, ac, av) != 0)
 		clean_exit(1, NULL);
 	init_mutexes(&info);
-	init_threads(&info);
-	kill_threads(&info);
+	init_threads(&info, t);
+	death_checker(&info);
+	monitor_threads(&info, t);
 	kill_mutexes(&info);
 	clean_exit(4, &info);
 }

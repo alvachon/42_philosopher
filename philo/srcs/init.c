@@ -6,13 +6,13 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 15:16:24 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/14 14:54:16 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/15 15:53:43 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-int	valid(int ac, char **av)
+int	valid(int ac, char **av)//no arg crash ...
 {
 	if (ac < 5 || ac > 6)
 		return (1);
@@ -36,9 +36,8 @@ void	init_philo(t_thread *philo_id, t_info *info, int t)
 	(philo_id)->info = info;
 }
 
-void	init_threads(t_info *info)
+void	init_threads(t_info *info, int t)
 {
-	int			t;
 	t_thread	*array_philo;
 	pthread_t	*threads;
 
@@ -50,7 +49,6 @@ void	init_threads(t_info *info)
 	if (!threads)
 		clean_exit(3, info);
 	info->thread_keeper = threads;
-	t = 0;
 	while (t < info->number_of_philosophers)
 	{
 		init_philo(&array_philo[t], info, t);
@@ -91,5 +89,26 @@ int	init_info(t_info *info, int ac, char **av)
 	if (ac == 6)
 		info->nb_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
 	info->died = 0;
+	info->lock_forks = 0;
 	return (0);
+}
+
+void	kill_mutexes(t_info *info)
+{
+	int	count;
+
+	count = info->number_of_philosophers;
+	while (count--)
+		pthread_mutex_destroy(&info->forks[count]);
+	pthread_mutex_destroy(&info->print);
+}
+
+void	monitor_threads(t_info *info, int t)
+{
+	while (t < info->number_of_philosophers)
+	{
+		if (pthread_join(info->thread_keeper[t], NULL) != 0)
+			return ;
+		t++;
+	}
 }

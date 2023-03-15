@@ -1,8 +1,6 @@
 
 # --- PROJECT -
 NAME			= philo
-UNAME_S		 	= 	$(shell uname -s)//
-REL_PATH		=	$(shell pwd)//
 # --- FILE ----
 INCL_DIR		= ./include
 SRCS_DIR		= ./srcs
