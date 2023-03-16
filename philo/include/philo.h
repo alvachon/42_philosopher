@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 10:32:47 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/15 16:49:32 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/16 15:58:54 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ typedef struct s_info
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print;
 	long int		time_of_death;
-	int				died;
 	int				lock_forks;
+	int				butler;
 	void			*array_keeper;
 	pthread_t		*thread_keeper;
 }					t_info;
@@ -47,13 +47,15 @@ typedef struct s_thread
 	int				thread_id;
 	long int		last_meal;
 	int				nb_meal;
+	int				died;
+	int				food;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*l_fork;
 	t_info			*info;
 }					t_thread;
 
 /*main*/
-int					break_conditions(t_thread *philo);
+int					conditions(t_thread *philo);
 void				*start(void *arg);
 void				monitor_threads(t_info *info, int t);
 void				kill_mutexes(t_info *info);

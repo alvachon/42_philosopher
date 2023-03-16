@@ -6,22 +6,20 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 15:16:24 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/15 15:53:43 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/16 15:50:12 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-int	valid(int ac, char **av)//no arg crash ...
+int	valid(int ac, char **av)
 {
-	if (ac < 5 || ac > 6)
-		return (1);
 	while (ac-- > 1)
 	{
 		if (is_num(av[ac]) == 1)
-			clean_exit(1, NULL);
+			return (1);
 		if (ft_atoi(av[ac]) > INT_MAX || ft_atoi(av[ac]) < 0)
-			clean_exit(1, NULL);
+			return (1);
 	}
 	return (0);
 }
@@ -88,7 +86,6 @@ int	init_info(t_info *info, int ac, char **av)
 		info->nb_of_times_each_philosopher_must_eat = -1;
 	if (ac == 6)
 		info->nb_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
-	info->died = 0;
 	info->lock_forks = 0;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 17:20:19 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/14 14:40:51 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/16 14:10:15 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,15 @@ int	is_num(char *str)
 	i = 0;
 	if (*str == '+')
 		str++;
-	while (str[i] >= '0' && str[i] <= '9')
-		i++;
-	if (str[i] == '\0')
-		return (0);
-	else if (!(str[i] >= '0' && str[i] <= '9'))
-		return (1);
-	return (1);
+	while (*str)
+	{
+		if (*str <= 32)
+			str++;
+		if (*str < '0' || *str > '9')
+			return (1);
+		str++;
+	}
+	return (0);
 }
 
 int	ft_atoi(char *str)
