@@ -1,6 +1,8 @@
 
 # --- PROJECT -
 NAME			= philo
+UNAME_S		 	= 	$(shell uname -s)
+REL_PATH		=	$(shell pwd)
 # --- FILE ----
 INCL_DIR		= ./include
 SRCS_DIR		= ./srcs
@@ -8,7 +10,9 @@ OBJS_DIR		= ./objs
 SRCS			= $(SRCS_DIR)/action.c \
 				  $(SRCS_DIR)/init.c \
 				  $(SRCS_DIR)/main.c \
-				  $(SRCS_DIR)/utils.c
+				  $(SRCS_DIR)/mutexes_exit.c \
+				  $(SRCS_DIR)/threads.c \
+				  $(SRCS_DIR)/time.c
 OBJS 			= $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 HDRS_FILE		= philo.h
 HDRS			= $(INCL_DIR)/$(HDRS_FILE)
@@ -56,9 +60,12 @@ fclean: clean
 
 re: fclean all
 
-#Need to remove SFLAGS to test Valgrind
+#Need to remove SFLAGS
 #leaks
 valgrind:
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./philo 1 10 5 5 2
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./philosopher 2 6 2 2
+#data race
+helgrind:
+	valgrind --tool=helgrind ./philosopher 1 2 3 4
 
 .PHONY:	all clean fclean re init
