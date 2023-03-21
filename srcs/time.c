@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 13:55:10 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/21 15:35:02 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/21 16:23:38 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,6 @@ long int	actual_time(void)
 	return (time);
 }
 
-/*
-! usleep normal
-* More precise usleep function that loop until reach limit.*/
 void	ms_wait(long int limit)
 {
 	long int	now;
