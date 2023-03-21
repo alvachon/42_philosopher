@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 15:16:24 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/20 15:08:08 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/21 15:01:19 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	valid(int ac, char **av)
 
 int	init_info(t_info *info, int ac, char **av)
 {
-	info->start = actual_time(info);
+	info->start = actual_time();
 	info->nb_philo = ft_atoi(av[1]);
 	info->time_to_die = ft_atoi(av[2]);
 	info->time_to_eat = ft_atoi(av[3]);
@@ -73,16 +73,6 @@ int	init_info(t_info *info, int ac, char **av)
 		info->must_eat_nb = -1;
 	if (ac == 6)
 		info->must_eat_nb = ft_atoi(av[5]);
-	info->dead = 0;
+	info->status = E_ALIVE;
 	return (0);
-}
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	int	i;
-
-	i = 0;
-	while (s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
-		i++;
-	return (s1[i] - s2[i]);
 }

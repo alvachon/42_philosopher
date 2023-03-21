@@ -8,6 +8,7 @@ INCL_DIR		= ./include
 SRCS_DIR		= ./srcs
 OBJS_DIR		= ./objs
 SRCS			= $(SRCS_DIR)/action.c \
+				  $(SRCS_DIR)/die_conditions.c \
 				  $(SRCS_DIR)/init.c \
 				  $(SRCS_DIR)/main.c \
 				  $(SRCS_DIR)/mutexes_exit.c \

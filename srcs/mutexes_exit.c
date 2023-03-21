@@ -6,16 +6,15 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 14:03:07 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/20 20:04:06 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/21 15:16:58 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
 /*
-& Malloc for each fork serve to keep each adresses back to back
-& Trigger setted to kill mutexes in case of
-*/
+Malloc for each fork serve to keep each adresses back to back
+Trigger setted to kill mutexes in case of */
 int	init_mutexes(t_info *info)
 {
 	int				count;
@@ -27,7 +26,8 @@ int	init_mutexes(t_info *info)
 		return (1);
 	info->forks = forks;
 	pthread_mutex_init(&info->print, NULL);
-	pthread_mutex_init(&info->lock_all, NULL);
+	pthread_mutex_init(&info->sim_start, NULL);
+	pthread_mutex_init(&info->sim_end, NULL);
 	while (count--)
 		pthread_mutex_init(&forks[count], NULL);
 	info->forks = forks;
@@ -43,27 +43,23 @@ void	kill_mutexes(t_info *info)
 	while (count--)
 		pthread_mutex_destroy(&info->forks[count]);
 	pthread_mutex_destroy(&info->print);
-	pthread_mutex_destroy(&info->lock_all);
+	pthread_mutex_destroy(&info->sim_start);
+	pthread_mutex_destroy(&info->sim_end);
 }
 
-/*
-* One function to rule them all*/
 int	clean_exit(int code, t_info *info, char *message)
 {
-	if (code == 2 || code == 3 || code == 4)
+	if (code == 2 || code == 3)
 	{
 		if (info->forks)
 			free(info->forks);
 		if (info->mutexes == 1)
 			kill_mutexes(info);
 	}
-	if (code == 3 || code == 4)
+	if (code == 3)
 	{
 		if (info->array)
 			free(info->array);
-	}
-	if (code == 4)
-	{
 		if (info->threads)
 			free (info->threads);
 	}

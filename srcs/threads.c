@@ -6,24 +6,34 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 13:58:49 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/20 20:02:59 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/21 15:16:32 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+/*
+Transfert necessary data to each thread to diminish qt of shared ressources.*/
 void	init_philo(t_thread *philo_id, t_info *info, int t)
 {
+	pthread_mutex_lock(&info->sim_start);
 	(philo_id)->thread_id = t + 1;
-	(philo_id)->nb_meal = 0;
+	(philo_id)->nb_meal = info->must_eat_nb;
 	(philo_id)->l_fork = &info->forks[t];
 	(philo_id)->r_fork = &info->forks[(t + 1) % info->nb_philo];
+	(philo_id)->t_die = info->time_to_die;
+	(philo_id)->t_eat = info->time_to_eat;
+	(philo_id)->t_sleep = info->time_to_sleep;
+	(philo_id)->t_think = info->time_to_sleep + info->time_to_eat;
+	(philo_id)->new_start = info->start;
+	(philo_id)->nb = info->nb_philo;
+	(philo_id)->philo_status = E_ALIVE;
 	(philo_id)->info = info;
 }
 
 /*
-* Each pthread_t have the data set of one item of array_philo*
-* I keep all data for a better clean later */
+Each pthread_t have the data set of one item of array_philo*
+I keep all data for a better clean later */
 int	init_threads(t_info *info, int t)
 {
 	t_thread	*array_philo;
@@ -42,7 +52,8 @@ int	init_threads(t_info *info, int t)
 		init_philo(&array_philo[t], info, t);
 		if (pthread_create(info->threads + t, NULL, &routine, \
 			(void *)&array_philo[t]) != 0)
-			return (2);
+			return (3);
+		pthread_mutex_unlock(&info->sim_start);
 		t++;
 	}
 	info->array = array_philo;

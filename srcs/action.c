@@ -6,43 +6,68 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 17:21:48 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/20 20:00:47 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/21 16:20:56 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
+
+void	set_new_attributes(t_thread *philo)
+{
+	philo->new_start = actual_time();
+	if (philo->nb_meal > 0)
+		philo->nb_meal -= 1;
+}
+
+void	lock_print_forks(t_thread *philo)
+{
+	pthread_mutex_lock(philo->r_fork);
+	print(philo, FORK);
+	pthread_mutex_lock(philo->l_fork);
+	print(philo, FORK);
+	print(philo, EAT);
+}
+
+void	unlock_forks(t_thread *philo)
+{
+	pthread_mutex_unlock(philo->r_fork);
+	pthread_mutex_unlock(philo->l_fork);
+}
 
 int	print(t_thread *philo, char *message)
 {
 	long int	time;
 
 	pthread_mutex_lock(&philo->info->print);
-	time = actual_time(philo->info) - philo->info->start;
-	if (ft_strcmp(DIED, message) == 0 && philo->info->dead == 0)
+	if (philo->info->status == E_DEAD)
 	{
-		printf("%ld\t%d\t%s\n", time, philo->thread_id, message);
-		philo->info->dead = 1;
+		pthread_mutex_unlock(&philo->info->print);
+		return (0);
 	}
-	if (philo->info->dead != 1)
+	time = actual_time() - philo->info->start;
+	if (philo->philo_status == E_DEAD)
+	{
+		pthread_mutex_lock(&philo->info->sim_end);
+		printf("%ld\t%d\t%s\n", time, philo->thread_id, message);
+		philo->info->status = E_DEAD;
+		pthread_mutex_unlock(&philo->info->sim_end);
+	}
+	else
 		printf("%ld\t%d\t%s\n", time, philo->thread_id, message);
 	pthread_mutex_unlock(&philo->info->print);
 	return (0);
 }
 
-int	time_to_eat(t_thread *philo)
+void	*do_stuff(t_thread *philo)
 {
-	pthread_mutex_lock(philo->r_fork);
-	pthread_mutex_lock(philo->l_fork);
-	print(philo, FORK);
-	print(philo, FORK);
-	ms_wait(*philo, philo->info->time_to_eat);
-	print(philo, EAT);
-	philo->last_meal = actual_time(philo->info);
-	if (philo->nb_meal != -1 || philo->nb_meal == philo->info->nb_philo)
-		philo->nb_meal += 1;
-	pthread_mutex_unlock(philo->r_fork);
-	pthread_mutex_unlock(philo->l_fork);
-	ms_wait(*philo, philo->info->time_to_sleep);
+	lock_print_forks(philo);
+	ms_wait(philo->t_eat);
+	set_new_attributes(philo);
+	unlock_forks(philo);
+	if (philo->nb_meal == 0)
+		return (0);
 	print(philo, SLEEP);
+	ms_wait(philo->t_sleep);
+	print(philo, THINK);
 	return (0);
 }

@@ -6,38 +6,32 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 17:21:09 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/20 20:00:40 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/21 16:17:54 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-/*
-! Implement qt system
-*/
-int	break_conditions(t_thread *philo)
+int	check_die_conditions(t_thread *philo)
 {
-	long int	timer;
-	long int	die;
-
-	pthread_mutex_lock(&philo->info->lock_all);
-	die = philo->info->time_to_die;
-	if (!philo->last_meal)
-		timer = actual_time(philo->info) - philo->info->start;
-	else
-		timer = actual_time(philo->info) - philo->last_meal;
-	if (timer - die >= 0)
+	if (philo->nb == 1)
+		return (one_philo(philo));
+	else if (philo->t_die <= philo->t_eat)
+		return (do_last(philo, E_EAT));
+	else if (philo->t_die <= philo->t_sleep)
+		return (do_last(philo, E_SLEEP));
+	else if (philo->t_die <= (philo->t_eat + philo->t_sleep))
+		return (do_last(philo, E_THINK));
+	else if ((philo->nb % 2 == 0) && (philo->t_sleep < philo->t_eat))
 	{
-		print(philo, DIED);
-		pthread_mutex_unlock(&philo->info->lock_all);
-		return (1);
+		if (philo->t_die < (philo->t_think * 2))
+			return (do_last(philo, E_EVEN));
 	}
-	if (philo->info->must_eat_nb == philo->nb_meal)
+	else if ((philo->nb % 2 != 0) && (philo->t_sleep < philo->t_eat))
 	{
-		pthread_mutex_unlock(&philo->info->lock_all);
-		return (1);
+		if (philo->t_die < (philo->t_think * 3))
+			return (do_last(philo, E_ODD));
 	}
-	pthread_mutex_unlock(&philo->info->lock_all);
 	return (0);
 }
 
@@ -46,18 +40,16 @@ void	*routine(void *arg)
 	t_thread	philo;
 
 	philo = *(t_thread *)arg;
-	if (philo.thread_id % 2 != 0)
-		usleep((philo.info->time_to_eat / 2) * 1000);
-	while (philo.info->dead == 0)
+	if (philo.thread_id % 2 == 0)
+		usleep((philo.t_die / 10) * 1500);
+	if (check_die_conditions(&philo) == 1)
+		return (0);
+	else
 	{
-		if (break_conditions(&philo) != 0)
-			break ;
-		time_to_eat(&philo);
-		if (break_conditions(&philo) != 0)
-			break ;
-		print(&philo, THINK);
-		if (break_conditions(&philo) != 0)
-			break ;
+		while (philo.nb_meal)
+			do_stuff(&philo);
+		while (philo.nb_meal == -1)
+			do_stuff(&philo);
 	}
 	return (0);
 }
@@ -82,9 +74,9 @@ int	main(int ac, char **av)
 		else if (r == 3)
 			return (clean_exit(r + 1, &info, PTHREAD_C));
 		if (monitor_threads(&info, t) == 1)
-			return (clean_exit(4, &info, PTHREAD_J));
+			return (clean_exit(3, &info, PTHREAD_J));
 		else
-			clean_exit(4, &info, END);
+			clean_exit(3, &info, END);
 	}
 	return (1);
 }
