@@ -56,7 +56,7 @@ clean:
 fclean: clean
 	@echo $(YELLOW) "\nRemoving .a:\n" $(RESET_COLOR)
 	$(REMOVE) $(NAME)
-	$(REMOVE) philosopher.dSYM
+	$(REMOVE) philo.dSYM
 	@echo $(RESET_COLOR)$(GREEN) "OK - - - - - - - - - - \n" $(RESET_COLOR)
 
 re: fclean all
@@ -65,8 +65,8 @@ re: fclean all
 #leaks
 valgrind:
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./philosopher 2 6 2 2
-#data race
-helgrind:
-	valgrind --tool=helgrind ./philosopher 1 2 3 4
+#Example for eval
+eval:
+	./philo 5 800 200 200 7 | grep "5\is eating" | wc -l
 
 .PHONY:	all clean fclean re init

@@ -6,14 +6,12 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 13:58:49 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/21 15:16:32 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/21 19:42:29 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-/*
-Transfert necessary data to each thread to diminish qt of shared ressources.*/
 void	init_philo(t_thread *philo_id, t_info *info, int t)
 {
 	pthread_mutex_lock(&info->sim_start);
@@ -31,9 +29,6 @@ void	init_philo(t_thread *philo_id, t_info *info, int t)
 	(philo_id)->info = info;
 }
 
-/*
-Each pthread_t have the data set of one item of array_philo*
-I keep all data for a better clean later */
 int	init_threads(t_info *info, int t)
 {
 	t_thread	*array_philo;

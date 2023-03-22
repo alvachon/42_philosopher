@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 13:09:39 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/21 15:24:02 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/21 19:38:55 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 # define SLEEP "is sleeping"
 # define DIED "died"
 # define FORK "as taken a fork"
-# define TIME "error:\n gettimeofday"
 # define MALLOC "error:\n memory"
 # define PTHREAD_C "error:\n pthread_create"
 # define PTHREAD_J "error:\n pthread_join"
@@ -40,7 +39,7 @@ typedef enum e_status
 	E_EAT,
 	E_SLEEP,
 	E_THINK,
-}	t_status;
+}					t_status;
 
 typedef struct s_info
 {
@@ -58,7 +57,7 @@ typedef struct s_info
 	int				mutexes;
 	void			*array;
 	pthread_t		*threads;
-}	t_info;
+}					t_info;
 
 typedef struct s_thread
 {
@@ -75,7 +74,7 @@ typedef struct s_thread
 	int				must_eat_nb;
 	int				philo_status;
 	t_info			*info;
-}	t_thread;
+}					t_thread;
 
 /* main */
 int					check_die_conditions(t_thread *philo);

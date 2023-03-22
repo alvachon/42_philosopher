@@ -6,17 +6,12 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 13:55:10 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/21 16:23:38 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/21 19:42:38 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-/*
-Actual time in MS (Miliseconds)
-Converting time in miliseconds:
-Seconds needs to be mutlplied by 1000;
-Microseconds need to be divided by 1000;*/
 long int	actual_time(void)
 {
 	long int		time;

@@ -6,15 +6,12 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 14:03:07 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/21 15:16:58 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/21 19:41:47 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-/*
-Malloc for each fork serve to keep each adresses back to back
-Trigger setted to kill mutexes in case of */
 int	init_mutexes(t_info *info)
 {
 	int				count;
