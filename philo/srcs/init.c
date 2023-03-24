@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 15:16:24 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/21 15:01:19 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/24 12:51:46 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@ int	is_num(char *str)
 	{
 		if (*str <= 32)
 			str++;
+		else
+			break ;
+	}
+	if (str[0] == '0')
+		return (1);
+	while (*str)
+	{
 		if (*str < '0' || *str > '9')
 			return (1);
 		str++;
@@ -27,10 +34,10 @@ int	is_num(char *str)
 	return (0);
 }
 
-int	ft_atoi(char *str)
+long	ft_atol(char *str)
 {
-	int	sign;
-	int	nb;
+	long	sign;
+	long	nb;
 
 	while (*str <= 32)
 		str++;
@@ -56,7 +63,7 @@ int	valid(int ac, char **av)
 	{
 		if (is_num(av[ac]) == 1)
 			return (1);
-		if (ft_atoi(av[ac]) > INT_MAX || ft_atoi(av[ac]) < 0)
+		if (ft_atol(av[ac]) > INT_MAX || ft_atol(av[ac]) < 0)
 			return (1);
 	}
 	return (0);
@@ -65,14 +72,14 @@ int	valid(int ac, char **av)
 int	init_info(t_info *info, int ac, char **av)
 {
 	info->start = actual_time();
-	info->nb_philo = ft_atoi(av[1]);
-	info->time_to_die = ft_atoi(av[2]);
-	info->time_to_eat = ft_atoi(av[3]);
-	info->time_to_sleep = ft_atoi(av[4]);
+	info->nb_philo = (int)ft_atol(av[1]);
+	info->time_to_die = (int)ft_atol(av[2]);
+	info->time_to_eat = (int)ft_atol(av[3]);
+	info->time_to_sleep = (int)ft_atol(av[4]);
 	if (ac == 5)
 		info->must_eat_nb = -1;
 	if (ac == 6)
-		info->must_eat_nb = ft_atoi(av[5]);
+		info->must_eat_nb = (int)ft_atol(av[5]);
 	info->status = E_ALIVE;
 	return (0);
 }

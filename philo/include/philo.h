@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 13:09:39 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/24 10:37:12 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/24 12:48:15 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int					do_last(t_thread *philo, t_status status);
 int					valid(int ac, char **av);
 int					init_info(t_info *info, int ac, char **av);
 int					is_num(char *str);
-int					ft_atoi(char *str);
+long				ft_atol(char *str);
 
 /* mutexes_exit.c*/
 int					init_mutexes(t_info *info);

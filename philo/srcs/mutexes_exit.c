@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 14:03:07 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/21 19:41:47 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/24 12:55:03 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ int	clean_exit(int code, t_info *info, char *message)
 {
 	if (code == 2 || code == 3)
 	{
-		if (info->forks)
-			free(info->forks);
 		if (info->mutexes == 1)
 			kill_mutexes(info);
+		if (info->forks)
+			free(info->forks);
 	}
 	if (code == 3)
 	{
