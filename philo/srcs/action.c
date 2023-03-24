@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 17:21:48 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/21 16:20:56 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/24 10:48:56 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	lock_print_forks(t_thread *philo)
 	print(philo, FORK);
 	pthread_mutex_lock(philo->l_fork);
 	print(philo, FORK);
-	print(philo, EAT);
 }
 
 void	unlock_forks(t_thread *philo)
@@ -61,8 +60,9 @@ int	print(t_thread *philo, char *message)
 void	*do_stuff(t_thread *philo)
 {
 	lock_print_forks(philo);
-	ms_wait(philo->t_eat);
+	print(philo, EAT);
 	set_new_attributes(philo);
+	ms_wait(philo->t_eat);
 	unlock_forks(philo);
 	if (philo->nb_meal == 0)
 		return (0);

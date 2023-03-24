@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 12:51:23 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/21 16:20:35 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/24 10:34:31 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	one_philo(t_thread *philo)
 int	do_last(t_thread *philo, t_status status)
 {
 	lock_print_forks(philo);
+	print(philo, EAT);
+	set_new_attributes(philo);
 	if (status == E_EAT)
 	{
 		wait_lock_die(philo);
@@ -41,7 +43,6 @@ int	do_last(t_thread *philo, t_status status)
 	}
 	else
 		ms_wait(philo->t_eat);
-	set_new_attributes(philo);
 	unlock_forks(philo);
 	print(philo, SLEEP);
 	if (status == E_SLEEP)
