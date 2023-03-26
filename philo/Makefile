@@ -62,11 +62,11 @@ fclean: clean
 re: fclean all
 
 #Need to remove SFLAGS
-#leaks
-valgrind:
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./philosopher 2 6 2 2
+#valgrind:
+#	valgrind ./philo 2 2000 200 200 2
+#	leaks --atExit -- ./philo 2 200 200 2
 #Example for eval
-eval:
-	./philo 5 800 200 200 7 | grep "5\is eating" | wc -l
+#eval:
+#	./philo 5 800 200 200 7 | grep "5\tis eating" | wc -l
 
 .PHONY:	all clean fclean re init
