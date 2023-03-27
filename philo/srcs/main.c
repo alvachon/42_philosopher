@@ -6,7 +6,7 @@
 /*   By: alvachon <alvachon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 17:21:09 by alvachon          #+#    #+#             */
-/*   Updated: 2023/03/21 16:17:54 by alvachon         ###   ########.fr       */
+/*   Updated: 2023/03/27 13:04:58 by alvachon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,10 @@ int	check_die_conditions(t_thread *philo)
 		return (do_last(philo, E_SLEEP));
 	else if (philo->t_die <= (philo->t_eat + philo->t_sleep))
 		return (do_last(philo, E_THINK));
-	else if ((philo->nb % 2 == 0) && (philo->t_sleep < philo->t_eat))
-	{
-		if (philo->t_die < (philo->t_think * 2))
-			return (do_last(philo, E_EVEN));
-	}
-	else if ((philo->nb % 2 != 0) && (philo->t_sleep < philo->t_eat))
-	{
-		if (philo->t_die < (philo->t_think * 3))
-			return (do_last(philo, E_ODD));
-	}
+	else if ((philo->nb % 2 == 0) && (philo->t_die < (philo->t_eat * 2)))
+		return (do_last(philo, E_EVEN));
+	else if ((philo->nb % 2 != 0) && (philo->t_die < (philo->t_eat * 3)))
+		return (do_last(philo, E_ODD));
 	return (0);
 }
 
